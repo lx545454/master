@@ -26,4 +26,9 @@ $app->group(['prefix' => 'api/v1'], function($app)
     $app->post('submit/update','SubmitController@updateSubmit');
 //    $app->delete('submit/{id}','SubmitController@deleteSubmit');
     $app->get('submit','SubmitController@index');
+
+    $app->post('sendVerifyCode','UserController@sendVerifyCode');
+    $app->post('login','UserController@login');
+
+
 });

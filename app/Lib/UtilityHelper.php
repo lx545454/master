@@ -6,9 +6,9 @@ class UtilityHelper {
     public static function createSign($data = array()) {
         ksort($data);			//先排序
         $params = urldecode(http_build_query($data));
-        $secretKey = env("APP_KEY");
-        $params .= '&sign=' . $secretKey;
-        $sign = md5($params);
+        $secretKey = env("SIGN_KEY");
+//        $params .= '&sign=' . $secretKey;
+        $sign = md5($params.$secretKey);
         return $sign;
     }
 
