@@ -16,10 +16,12 @@ class Request
 
         'user/send_verify_code' => array("API_LM",'user/send_verify_code','post'),
         'user/login' => array("API_LM",'user/login','post'),
+        'user/get_user_info' => array("API_LM",'user/get_user_info','post'),
 
     );
 
     public static function requset_all($key,$type,$params){
+        $params['sign'] = UtilityHelper::createSign($params);
 
         if(isset(self::$arr[$key])){
             $api = self::$arr[$key];

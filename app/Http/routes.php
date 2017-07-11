@@ -29,6 +29,6 @@ $app->group(['prefix' => 'api/v1'], function($app)
 
     $app->post('sendVerifyCode','UserController@sendVerifyCode');
     $app->post('login','UserController@login');
-
+    $app->post('user-info','UserController@userInfo');
 
 });

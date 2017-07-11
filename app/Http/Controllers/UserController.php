@@ -38,6 +38,18 @@ class UserController extends Controller
         return UtilityHelper::renderJson($sub);
     }
 
+    public function userInfo(Request $request)
+    {
+        $sub_data['user_token'] = $request->input('user_token', '');
+//        $sub_data['merchant_id'] = $request->input('merchant_id', '38206');
+//        $sub_data['sign'] = UtilityHelper::createSign($sub_data);
+//        if (in_array('', $sub_data)) {
+//            return UtilityHelper::showError(Code::HTTP_REQUEST_PARAM_ERROR);
+//        }
+
+        $sub = REQ::requset_all('user/get_user_info','form',$sub_data);
+        return $sub;
+    }
 
     public function updateUser(Request $request)
     {
