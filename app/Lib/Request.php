@@ -17,6 +17,14 @@ class Request
         'user/send_verify_code' => array("API_LM",'user/send_verify_code','post'),
         'user/login' => array("API_LM",'user/login','post'),
         'user/get_user_info' => array("API_LM",'user/get_user_info','post'),
+        'user/add_bank_card' => array("API_LM",'user/add_bank_card','post'),
+        'user/bet' => array("API_LM",'user/bet','post'),//投注
+        'user/delete_bank_card' => array("API_LM",'user/delete_bank_card','post'),
+        'user/get_account_balance' => array("API_LM",'user/get_account_balance','post'),
+        'user/get_bank_card_list' => array("API_LM",'user/get_bank_card_listget_bank_card_list','post'),
+        'user/get_lottery_order' => array("API_LM",'user/get_lottery_order','post'),
+        'user/realname_authentication' => array("API_LM",'user/realname_authentication','post'),//实名认证
+        'user/set_trade_password' => array("API_LM",'user/set_trade_password','post'),
 
     );
 
