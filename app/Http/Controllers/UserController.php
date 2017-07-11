@@ -54,6 +54,7 @@ class UserController extends Controller
     public function delete_bank_card(Request $request)
     {
         $sub_data['user_token'] = $request->input('user_token', '');
+        $sub_data['card_id'] = $request->input('card_id', '');
         $sub = REQ::requset_all('user/'.__FUNCTION__,'form',$sub_data);
         return $sub;
     }
