@@ -38,7 +38,7 @@ class UserController extends Controller
     public function add_bank_card(Request $request)
     {
         $sub_data['user_token'] = $request->input('user_token', '');
-        $sub_data['card_nocard_nostringtrue'] = $request->input('card_nocard_nostringtrue', '');
+        $sub_data['card_no'] = $request->input('card_no', '');
         $sub = REQ::requset_all('user/'.__FUNCTION__,'form',$sub_data);
         return $sub;
     }
