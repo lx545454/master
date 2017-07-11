@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Models\Lunbotu;
+use App\Lunbotu;
 use App\Lib\Code;
 use App\Lib\UtilityHelper;
 use App\Lib\Request as REQ;
