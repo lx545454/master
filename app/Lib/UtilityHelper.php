@@ -39,10 +39,15 @@ class UtilityHelper {
             $data = array($data);
         }
 //        $data = json_encode($data);
-        $json_arr['errcode'] = $errcode;
-        $json_arr['errmsg'] = $errmsg;
-        $json_arr['total'] = $total;
-        $json_arr['data'] = $data;
+        $json_arr['error_code'] = $errcode;
+        $json_arr['error_msg'] = $errmsg;
+//        $json_arr['total'] = $total;
+        if($total > 0){
+            $json_arr['data'] = array('total'=>$total,'data'=>$data);
+        }else{
+            $json_arr['data'] = $data;
+        }
+
 //        $json_arr = '{"errcode":'.$errcode.',"errmsg":"'.$errmsg.'","total":'.$total.',"data":'.$data.'}';
         return response()->json($json_arr);
     }
