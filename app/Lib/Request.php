@@ -97,7 +97,7 @@ class Request
         if ($res->getStatusCode() == 200) {
 //            Log::info('BD response: '.$res->getBody());
             $data = \json_decode($res->getBody(), true);
-            dd($url, $options, $data);
+//            dd($url, $options, $data);
             return $data;
         }
 //        Log::warn('BD request error '.$url.' status code '.$res->getStatusCode().' body '.$res->getBody());
