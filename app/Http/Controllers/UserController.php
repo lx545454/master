@@ -27,12 +27,9 @@ class UserController extends Controller
     {
         $sub_data['mobile'] = $request->input('mobile', '13817715315');
         $sub_data['verify_code'] = $request->input('verify_code', '888888');
-        $sub_data['merchant_id'] = $request->input('merchant_id', '38206');
-        $sub_data['sign'] = UtilityHelper::createSign($sub_data);
 
         $sub = REQ::requset_all('user/login','form',$sub_data);
         return $sub;
-        return UtilityHelper::renderJson($sub);
     }
 
     public function add_bank_card(Request $request)
