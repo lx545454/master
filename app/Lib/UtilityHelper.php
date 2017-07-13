@@ -5,10 +5,9 @@ use App\Lib\Code;
 class UtilityHelper {
     public static function createSign($data = array()) {
         ksort($data);			//先排序
-        $params = urldecode(http_build_query($data));
-        $secretKey = env("SIGN_KEY");
-//        $params .= '&sign=' . $secretKey;
-        $sign = md5($params.$secretKey);
+        $params = urldecode(http_build_query($data)); // 转为i字符串
+        $secretKey = env("SIGN_KEY"); //辅助密钥
+        $sign = md5($params.$secretKey); //组合两个字符串后，MD5加密
         return $sign;
     }
 
@@ -57,9 +56,9 @@ class UtilityHelper {
         $errmsg = Code::getErrorMsg($code);
 //        $data = json_encode(array());
 //        die('{"errcode":'.$code.',"errmsg":"'.$errmsg.'","total":'.$total.',"data":'.$data.'}');
-        $json_arr['errcode'] = $code;
-        $json_arr['errmsg'] = $errmsg;
-        $json_arr['total'] = 0;
+        $json_arr['error_code'] = $code;
+        $json_arr['error_msg'] = $errmsg;
+//        $json_arr['total'] = 0;
         $json_arr['data'] = array();
         return response()->json($json_arr);
     }

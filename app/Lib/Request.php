@@ -31,7 +31,6 @@ class Request
     );
 
     public static function requset_all($key,$type,$params){
-        $params['merchant_id'] = '38206';
         $params['timestamp'] = date('Ymdhis');
         $params['sign'] = UtilityHelper::createSign($params);
 

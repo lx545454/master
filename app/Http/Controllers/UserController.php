@@ -26,6 +26,7 @@ class UserController extends Controller
     public function login(Request $request)
     {
         $sub_data['mobile'] = $request->input('mobile', '13817715315');
+        $sub_data['merchant_id'] = $request->input('merchant_id', '');
         $sub_data['verify_code'] = $request->input('verify_code', '888888');
 
         $sub = REQ::requset_all('user/login','form',$sub_data);
@@ -35,6 +36,7 @@ class UserController extends Controller
     public function add_bank_card(Request $request)
     {
         $sub_data['user_token'] = $request->input('user_token', '');
+        $sub_data['merchant_id'] = $request->input('merchant_id', '');
         $sub_data['card_no'] = $request->input('card_no', '');
         $sub = REQ::requset_all('user/'.__FUNCTION__,'form',$sub_data);
         return $sub;
@@ -43,6 +45,7 @@ class UserController extends Controller
     public function bet(Request $request)
     {
         $sub_data['user_token'] = $request->input('user_token', '');
+        $sub_data['merchant_id'] = $request->input('merchant_id', '');
         $sub_data['bet_data'] = $request->input('bet_data', '');
         $sub = REQ::requset_all('user/'.__FUNCTION__,'form',$sub_data);
         return $sub;
@@ -51,6 +54,7 @@ class UserController extends Controller
     public function delete_bank_card(Request $request)
     {
         $sub_data['user_token'] = $request->input('user_token', '');
+        $sub_data['merchant_id'] = $request->input('merchant_id', '');
         $sub_data['card_id'] = $request->input('card_id', '');
         $sub = REQ::requset_all('user/'.__FUNCTION__,'form',$sub_data);
         return $sub;
@@ -59,6 +63,7 @@ class UserController extends Controller
     public function get_account_balance(Request $request)
     {
         $sub_data['user_token'] = $request->input('user_token', '');
+        $sub_data['merchant_id'] = $request->input('merchant_id', '');
         $sub = REQ::requset_all('user/'.__FUNCTION__,'form',$sub_data);
         return $sub;
     }
@@ -66,6 +71,7 @@ class UserController extends Controller
     public function get_bank_card_list(Request $request)
     {
         $sub_data['user_token'] = $request->input('user_token', '');
+        $sub_data['merchant_id'] = $request->input('merchant_id', '');
         $sub = REQ::requset_all('user/'.__FUNCTION__,'form',$sub_data);
         return $sub;
     }
@@ -73,6 +79,7 @@ class UserController extends Controller
     public function get_lottery_order(Request $request)
     {
         $sub_data['user_token'] = $request->input('user_token', '');
+        $sub_data['merchant_id'] = $request->input('merchant_id', '');
         $sub = REQ::requset_all('user/'.__FUNCTION__,'form',$sub_data);
         return $sub;
     }
@@ -80,6 +87,7 @@ class UserController extends Controller
     public function realname_authentication(Request $request)
     {
         $sub_data['user_token'] = $request->input('user_token', '');
+        $sub_data['merchant_id'] = $request->input('merchant_id', '');
         $sub_data['realname'] = $request->input('realname', '');
         $sub_data['idcard'] = $request->input('idcard', '');
         $sub = REQ::requset_all('user/'.__FUNCTION__,'form',$sub_data);
@@ -89,6 +97,7 @@ class UserController extends Controller
     public function set_trade_password(Request $request)
     {
         $sub_data['user_token'] = $request->input('user_token', '');
+        $sub_data['merchant_id'] = $request->input('merchant_id', '');
         $sub_data['verify_code'] = $request->input('verify_code', '');
         $sub_data['password'] = $request->input('password', '');
         $sub = REQ::requset_all('user/'.__FUNCTION__,'form',$sub_data);
@@ -97,7 +106,8 @@ class UserController extends Controller
     public function userInfo(Request $request)
     {
         $sub_data['user_token'] = $request->input('user_token', '');
-        $sub = REQ::requset_all('user/get_user_info','form',$sub_data);
+        $sub_data['merchant_id'] = $request->input('merchant_id', '');
+        $sub = REQ::requset_all('user/get_user_info','form',$sub_data);print_r($sub);
         //添加余额
         $money = REQ::requset_all('user/get_account_balance','form',$sub_data);
         if(isset($money['error_code'])&&!$money['error_code']){
