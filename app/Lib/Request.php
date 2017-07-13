@@ -25,6 +25,8 @@ class Request
         'user/get_lottery_order' => array("API_LM",'user/get_lottery_order','post'),
         'user/realname_authentication' => array("API_LM",'user/realname_authentication','post'),//实名认证
         'user/set_trade_password' => array("API_LM",'user/set_trade_password','post'),
+        //支付
+        'pay/recharge' => array("API_LM",'pay/recharge','post'),
 
     );
 

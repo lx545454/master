@@ -28,6 +28,8 @@ $app->group(['prefix' => 'api/v1'], function($app)
     $app->post('realname_authentication','UserController@realname_authentication');
     $app->post('set_trade_password','UserController@set_trade_password');
 
+    $app->post('recharge','PayController@recharge');
+
     $app->post('lunbotu','IndexController@lunbotu');
     $app->get('push2app','PushController@push');
 
