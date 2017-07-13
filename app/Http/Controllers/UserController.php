@@ -98,6 +98,12 @@ class UserController extends Controller
     {
         $sub_data['user_token'] = $request->input('user_token', '');
         $sub = REQ::requset_all('user/get_user_info','form',$sub_data);
+        //添加余额
+        $money = REQ::requset_all('user/get_account_balance','form',$sub_data);
+        if(isset($money['error_code'])&&!$money['error_code']){
+            $data_m = $money['data'];
+        }
+        $sub['data'] = $sub['data']+$data_m;
         return $sub;
     }
 

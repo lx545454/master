@@ -11,9 +11,9 @@ class BasicMiddleware {
 		//首先判断get及post方法
 		$method = $request->method();
 		$url = $request->server()['REDIRECT_URL'];
-        $routes = App::getRoutes();
-        dd($routes);
-        $routes = App::getFacadeRoot()->getRoutes();
+//        $routes = App::getRoutes();
+//        dd($routes);
+        $routes = App::getFacadeRoot();
 		$key = $method.$url;
 		if (!isset($routes[$key])) {
 			UtilityHelper::showError(Code::HTTP_REQUEST_METHOD_ERROR);
