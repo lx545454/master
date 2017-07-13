@@ -29,5 +29,6 @@ $app->group(['prefix' => 'api/v1'], function($app)
     $app->post('set_trade_password','UserController@set_trade_password');
 
     $app->post('lunbotu','IndexController@lunbotu');
+    $app->get('push2app','PushController@push');
 
 });
