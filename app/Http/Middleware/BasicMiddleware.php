@@ -5,6 +5,7 @@ use App\Lib\UtilityHelper;
 use App\Lib\Code;
 use App\Lib\RedisHelper;
 use Illuminate\Support\Facades\App;
+use Log;
 
 class BasicMiddleware {
 	public function handle($request, Closure $next) {
@@ -19,7 +20,7 @@ class BasicMiddleware {
         }
 
 		$sign = $request->input('sign');
-		$params = $request->query->all();
+		$params = $log = $request->query->all();
 		//剔除sign
 		unset($params['sign']);
 //		//如果无参数,通过
@@ -28,8 +29,7 @@ class BasicMiddleware {
 //		}
 
 		$generated = UtilityHelper::createSign($params);
-
-
+        Log::info('loginfo', ['params' => $log,'sign'=>$generated]);
 		//判断两边sign是否正确
 		if ($sign == $generated) {
 			return $next($request);

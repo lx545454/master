@@ -107,7 +107,7 @@ class UserController extends Controller
     {
         $sub_data['user_token'] = $request->input('user_token', '');
         $sub_data['merchant_id'] = $request->input('merchant_id', '');
-        $sub = REQ::requset_all('user/get_user_info','form',$sub_data);print_r($sub);
+        $sub = REQ::requset_all('user/get_user_info','form',$sub_data);
         //添加余额
         $money = REQ::requset_all('user/get_account_balance','form',$sub_data);
         if(isset($money['error_code'])&&!$money['error_code']){
