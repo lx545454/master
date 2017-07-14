@@ -5,6 +5,7 @@ use App\Lib\UtilityHelper;
 use App\Lib\Code;
 use App\Lib\RedisHelper;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Input;
 use Log;
 
 class BasicMiddleware {
@@ -21,7 +22,7 @@ class BasicMiddleware {
         }
 
 		$sign = $request->input('sign');
-		$params = $log = $request->query->all();
+		$params = $log = Input::get();
 		//剔除sign
 		unset($params['sign']);
 //		//如果无参数,通过
@@ -33,10 +34,10 @@ class BasicMiddleware {
 		$str = UtilityHelper::_getSign($params);
         Log::info('loginfo', ['url'=>$method.'>>>'.$url,'str'=>$str,'params' => \GuzzleHttp\json_encode($_REQUEST),'sign'=>$generated,'server'=>$request]);
 		//判断两边sign是否正确
-		if ($sign == $generated) {
+//		if ($sign == $generated) {
 			return $next($request);
-		} else {
-            return UtilityHelper::showError(Code::SIGN_ERROR);
-		}
+//		} else {
+//            return UtilityHelper::showError(Code::SIGN_ERROR);
+//		}
 	}
 }
