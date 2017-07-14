@@ -64,7 +64,7 @@ $app->singleton(
      App\Http\Middleware\BasicMiddleware::class,			//签名验证
      App\Http\Middleware\ErrorHandlerMiddleware::class,	//错误拦截
 //     App\Http\Middleware\XssMiddleware::class,          //xss,sql注入拦截
-//     App\Http\Middleware\OutputMiddleware::class,		//最后输出
+     App\Http\Middleware\OutputMiddleware::class,		//最后输出
  ]);
 
 // $app->routeMiddleware([

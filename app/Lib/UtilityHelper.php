@@ -7,7 +7,7 @@ class UtilityHelper {
         ksort($data);			//先排序
         foreach ($data as $k=>&$v){
             if(is_array($v)){
-                $v = "123";
+                $v = \GuzzleHttp\json_encode($v);
             }
         }
         $params = urldecode(http_build_query($data)); // 转为字符串
