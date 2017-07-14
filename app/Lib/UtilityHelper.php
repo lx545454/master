@@ -11,6 +11,14 @@ class UtilityHelper {
         return $sign;
     }
 
+    public static function _getSign($data = array()) {
+        ksort($data);			//先排序
+        $params = urldecode(http_build_query($data)); // 转为i字符串
+        $secretKey = env("SIGN_KEY"); //辅助密钥
+        $sign = md5($params.$secretKey); //组合两个字符串后，MD5加密
+        return $params.$secretKey;
+    }
+
     /**
      * 根据情况，将公共参数顺序定死，后面接上浮动的参数再进行加密
      * @param unknown $data
