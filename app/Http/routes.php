@@ -32,5 +32,8 @@ $app->group(['prefix' => 'api/v1'], function($app)
 
     $app->post('lunbotu','IndexController@lunbotu');
     $app->get('push2app','PushController@push');
+    $app->post('get_current_period','FactoryController@super');
+    $app->post('get_dlt_example','FactoryController@super');
+    $app->post('get_lottery_list','FactoryController@super');
 
 });

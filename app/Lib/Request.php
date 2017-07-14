@@ -27,6 +27,10 @@ class Request
         'user/set_trade_password' => array("API_LM",'user/set_trade_password','post'),
         //支付
         'pay/recharge' => array("API_LM",'pay/recharge','post'),
+        //彩票
+        'get_current_period' => array("API_LM",'lottery/get_current_period','post'),
+        'get_dlt_example' => array("API_LM",'lottery/get_dlt_example','post'),
+        'get_lottery_list' => array("API_LM",'lottery/get_lottery_list','post'),
 
     );
 
