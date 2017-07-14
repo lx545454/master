@@ -8,6 +8,9 @@ class UtilityHelper {
         foreach ($data as $k=>&$v){
             if(is_array($v)){
                 $v = \GuzzleHttp\json_encode($v);
+                $v = str_replace('\\','',$v);
+                $v = str_replace('\"','',$v);
+                $v = str_replace('\'','',$v);
             }
         }
         $params = urldecode(http_build_query($data)); // 转为字符串

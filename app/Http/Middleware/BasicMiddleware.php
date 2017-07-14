@@ -32,12 +32,12 @@ class BasicMiddleware {
 
 		$generated = UtilityHelper::createSign($params);
 		$str = UtilityHelper::_getSign($params);
-
+        Log::info('requestLog1',['url'=>$method.'>>>'.$url,'str'=>$str,'params' =>$log,'sign'=>$generated]);
 		//判断两边sign是否正确
 		if ($sign == $generated) {
 			return $next($request);
 		} else {
-            Log::info('requestLog', ['url'=>$method.'>>>'.$url,'str'=>$str,'params' =>$log,'sign'=>$generated]);
+            Log::info('requestLog',['url'=>$method.'>>>'.$url,'str'=>$str,'params' =>$log,'sign'=>$generated]);
             return UtilityHelper::showError(Code::SIGN_ERROR);
 		}
 	}
