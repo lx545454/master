@@ -7,10 +7,7 @@ class UtilityHelper {
         ksort($data);			//先排序
         foreach ($data as $k=>&$v){
             if(is_array($v)){
-                $v = \GuzzleHttp\json_encode($v);
-                $v = str_replace('\\','',$v);
-                $v = str_replace('\"','',$v);
-                $v = str_replace('\'','',$v);
+                $v = "123";
             }
         }
         $params = urldecode(http_build_query($data)); // 转为字符串
@@ -31,10 +28,7 @@ class UtilityHelper {
         ksort($data);			//先排序
         foreach ($data as $k=>&$v){
             if(is_array($v)){
-                $v = \GuzzleHttp\json_encode($v);
-                $v = str_replace('\\','',$v);
-                $v = str_replace('\"','',$v);
-                $v = str_replace('\'','',$v);
+                $v = "123";
             }
         }
         $params = urldecode(http_build_query($data)); // 转为i字符串
