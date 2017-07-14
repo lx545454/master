@@ -4,7 +4,7 @@ use App\Lib\Code;
 
 class UtilityHelper {
     public static function createSign($data = array(),$key="SIGN_KEY") {
-        ksort($data);			//先排序
+        ksort($data,SORT_STRING );			//先排序
         $params = urldecode(http_build_query($data)); // 转为i字符串
         $secretKey = env($key); //辅助密钥
         $sign = md5($params.$secretKey); //组合两个字符串后，MD5加密
@@ -12,7 +12,7 @@ class UtilityHelper {
     }
 
     public static function _getSign($data = array()) {
-        ksort($data);			//先排序
+        ksort($data,SORT_STRING );			//先排序
         $params = urldecode(http_build_query($data)); // 转为i字符串
         $secretKey = env("SIGN_KEY"); //辅助密钥
         $sign = md5($params.$secretKey); //组合两个字符串后，MD5加密
