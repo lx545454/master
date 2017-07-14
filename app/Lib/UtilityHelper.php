@@ -4,15 +4,20 @@ use App\Lib\Code;
 
 class UtilityHelper {
     public static function createSign($data = array(),$key="SIGN_KEY") {
-        ksort($data,SORT_STRING );			//先排序
-        $params = urldecode(http_build_query($data)); // 转为i字符串
+        ksort($data);			//先排序
+        $params = "";
+        foreach ($data as $k=>$v){
+            $params .= $k.'='.$v.'&';
+        }
+        $params = substr($params,0,-1);
+//        $params = urldecode(http_build_query($data)); // 转为字符串
         $secretKey = env($key); //辅助密钥
         $sign = md5($params.$secretKey); //组合两个字符串后，MD5加密
         return $sign;
     }
 
     public static function _getSign($data = array()) {
-        ksort($data,SORT_STRING );			//先排序
+        ksort($data);			//先排序
         $params = urldecode(http_build_query($data)); // 转为i字符串
         $secretKey = env("SIGN_KEY"); //辅助密钥
         $sign = md5($params.$secretKey); //组合两个字符串后，MD5加密
