@@ -36,7 +36,7 @@ class Request
 
     public static function requset_all($key,$type,$params,$sign_key="SIGN_KEY"){
         $params['timestamp'] = date('Ymdhis');
-        $params['sign'] = UtilityHelper::createSign($params,$sign_key);
+        $params['sign'] = UtilityHelper::createSign_lm($params,$sign_key);
 
         if(isset(self::$arr[$key])){
             $api = self::$arr[$key];

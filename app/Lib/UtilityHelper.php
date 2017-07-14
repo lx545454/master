@@ -16,6 +16,14 @@ class UtilityHelper {
         return $sign;
     }
 
+    public static function createSign_lm($data = array(),$key="SIGN_KEY") {
+        ksort($data);			//先排序
+        $params = urldecode(http_build_query($data)); // 转为字符串
+        $secretKey = env($key); //辅助密钥
+        $sign = md5($params.$secretKey); //组合两个字符串后，MD5加密
+        return $sign;
+    }
+
     public static function _getSign($data = array()) {
         ksort($data);			//先排序
         foreach ($data as $k=>&$v){
