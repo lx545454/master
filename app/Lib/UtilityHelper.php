@@ -26,14 +26,11 @@ class UtilityHelper {
 
     public static function _getSign($data = array()) {
         ksort($data);			//先排序
-        print_r($data);
         foreach ($data as $k=>&$v){
-            $s = substr($v,0,1);
-            if($s == "{"){
+            if(!is_null(json_decode($v))){
                 $v = "123";
             }
         }
-        print_r($data);
         $params = urldecode(http_build_query($data)); // 转为i字符串
         $secretKey = env("SIGN_KEY"); //辅助密钥
         $sign = md5($params.$secretKey); //组合两个字符串后，MD5加密
