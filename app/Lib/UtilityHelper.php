@@ -6,8 +6,7 @@ class UtilityHelper {
     public static function createSign($data = array(),$key="SIGN_KEY") {
         ksort($data);			//先排序
         foreach ($data as $k=>&$v){
-            $s = substr($v,0,1);
-            if($s == "{"){
+            if(is_array($v)){
                 $v = "123";
             }
         }
@@ -28,8 +27,7 @@ class UtilityHelper {
     public static function _getSign($data = array()) {
         ksort($data);			//先排序
         foreach ($data as $k=>&$v){
-            $s = substr($v,0,1);
-            if($s == "{"){
+            if(is_array($v)){
                 $v = "123";
             }
         }
