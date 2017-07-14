@@ -20,7 +20,7 @@ $app->group(['prefix' => 'api/v1'], function($app)
     $app->post('login','UserController@login');
     $app->post('user-info','UserController@userInfo');
     $app->post('add_bank_card','UserController@add_bank_card');
-    $app->post('bet','UserController@bet');
+    $app->post('bet','PayController@bet');
     $app->post('delete_bank_card','UserController@delete_bank_card');
     $app->post('get_account_balance','UserController@get_account_balance');
     $app->post('get_bank_card_list','UserController@get_bank_card_list');

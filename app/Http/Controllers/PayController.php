@@ -18,5 +18,13 @@ class PayController extends Controller
         return $sub;
     }
 
+    public function bet(Request $request)
+    {
+        $sub_data['user_token'] = $request->input('user_token', '');
+        $sub_data['merchant_id'] = $request->input('merchant_id', '');
+        $sub_data['bet_data'] = $request->input('bet_data', '');
+        $sub = REQ::requset_all('user/'.__FUNCTION__,'form',$sub_data,'PAY_KEY');
+        return $sub;
+    }
 
 }
