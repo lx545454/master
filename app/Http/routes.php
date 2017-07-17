@@ -36,4 +36,15 @@ $app->group(['prefix' => 'api/v1'], function($app)
     $app->post('get_dlt_example','FactoryController@super');
     $app->post('get_lottery_list','FactoryController@super');
 
+    $app->post('analyst_user_update','FactoryController@super');
+    $app->post('analyst_project_add','FactoryController@super');
+    $app->post('analyst_project_lists','FactoryController@super');
+    $app->post('analyst_week_lists','FactoryController@super');
+    $app->post('analyst_project_detail','FactoryController@super');
+    $app->post('analyst_project_like','FactoryController@super');
+    $app->post('analyst_project_unlike','FactoryController@super');
+    $app->post('analyst_comment_add','FactoryController@super');
+    $app->post('analyst_comment_like','FactoryController@super');
+    $app->post('analyst_comment_unlike','FactoryController@super');
+
 });

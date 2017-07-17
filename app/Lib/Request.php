@@ -31,6 +31,17 @@ class Request
         'get_current_period' => array("API_LM",'lottery/get_current_period','post'),
         'get_dlt_example' => array("API_LM",'lottery/get_dlt_example','post'),
         'get_lottery_list' => array("API_LM",'lottery/get_lottery_list','post'),
+        //专家
+        'analyst_user_update' => array("API_CZD",'analyst/user/update','post'),
+        'analyst_project_add' => array("API_CZD",'analyst/project/add','post'),
+        'analyst_project_lists' => array("API_CZD",'analyst/project/lists','post'),
+        'analyst_week_lists' => array("API_CZD",'analyst/week/lists','post'),
+        'analyst_project_detail' => array("API_CZD",'analyst/project/detail','post'),
+        'analyst_project_like' => array("API_CZD",'analyst/project/like','post'),
+        'analyst_project_unlike' => array("API_CZD",'analyst/project/unlike','post'),
+        'analyst_comment_add' => array("API_CZD",'analyst/comment/add','post'),
+        'analyst_comment_like' => array("API_CZD",'analyst/comment/like','post'),
+        'analyst_comment_unlike' => array("API_CZD",'analyst/comment/unlike','post'),
 
     );
 
@@ -79,7 +90,7 @@ class Request
         $url = env($url_).$uri;
         $options = [
             'connect_timeout' => 3,
-            'query' => $params,
+//            'query' => $params,
         ];
         return self::request($method,$url, $params,$options);
     }
@@ -97,7 +108,7 @@ class Request
         try {
             $res = $client->request(strtoupper($method), $url, $options);
         } catch (\Exception $e) {
-            return false;
+            return UtilityHelper::showError(40000);
         }
         if ($res->getStatusCode() == 200) {
 //            Log::info('BD response: '.$res->getBody());
