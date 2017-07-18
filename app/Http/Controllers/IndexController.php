@@ -5,6 +5,7 @@ use App\Lunbotu;
 use App\Lib\Code;
 use App\Lib\UtilityHelper;
 use App\Lib\Request as REQ;
+use App\Xiaoxi;
 use Illuminate\Http\Request;
 
 class IndexController extends Controller
@@ -31,7 +32,10 @@ class IndexController extends Controller
 //        $count = $query->count();
         $lunbo = $query->skip($skip)->take($pageSize)->get()->toArray();
 
+        $query_xiaoxi = Xiaoxi::query();
+        $xiaoxi = $query_xiaoxi->get()->toArray();
         $data['lunbo'] = $lunbo;
+        $data['gonggao'] = $xiaoxi;
 
         return UtilityHelper::renderJson($data, 0, '');
     }
