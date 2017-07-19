@@ -47,4 +47,16 @@ $app->group(['prefix' => 'api/v1'], function($app)
     $app->post('analyst_comment_like','FactoryController@super');
     $app->post('analyst_comment_unlike','FactoryController@super');
 
+    $app->post('analyst_user_detail','FactoryController@super');
+    $app->post('analyst_user_recommendProject','FactoryController@super');
+    $app->post('analyst_user_myProject','FactoryController@super');
+    $app->post('analyst_attention_add','FactoryController@super');
+    $app->post('analyst_attention_cancel','FactoryController@super');
+    $app->post('analyst_user_fansNum','FactoryController@super');
+    $app->post('analyst_user_fansLists','FactoryController@super');
+    $app->post('analyst_user_attentionLists','FactoryController@super');
+
+    $app->post('analyst_user_detail_userinfo','ZhuanjiaController@analyst_user_detail_userinfo');
+    $app->post('analyst_project_detail_userinfo','ZhuanjiaController@analyst_project_detail_userinfo');
+
 });

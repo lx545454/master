@@ -42,6 +42,16 @@ class Request
         'analyst_comment_add' => array("API_CZD",'analyst/comment/add','post'),
         'analyst_comment_like' => array("API_CZD",'analyst/comment/like','post'),
         'analyst_comment_unlike' => array("API_CZD",'analyst/comment/unlike','post'),
+        'analyst_user_detail' => array("API_CZD",'analyst/user/detail','post'),
+        'analyst_user_recommendProject' => array("API_CZD",'analyst/user/recommendProject','post'),
+
+        'analyst_user_myProject' => array("API_CZD",'analyst/user/myProject','post'),
+        'analyst_attention_add' => array("API_CZD",'analyst/attention/add','post'),
+        'analyst_attention_cancel' => array("API_CZD",'analyst/attention/cancel','post'),
+        'analyst_user_fansNum' => array("API_CZD",'analyst/user/fansNum','post'),
+        'analyst_user_fansLists' => array("API_CZD",'analyst/user/fansLists','post'),
+        'analyst_user_attentionLists' => array("API_CZD",'analyst/user/attentionLists','post'),
+
 
     );
 
@@ -108,6 +118,7 @@ class Request
         try {
             $res = $client->request(strtoupper($method), $url, $options);
         } catch (\Exception $e) {
+            dd($e);
             return UtilityHelper::showError(40000);
         }
         if ($res->getStatusCode() == 200) {
