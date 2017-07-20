@@ -22,8 +22,8 @@ class ZhuanjiaController extends Controller
         }else{
             $sub['data']['fangan'] = array();
         }
-        print_r($sub);
-        return $sub;
+        $callback = Input::get('callback');
+        return  $callback."(".\GuzzleHttp\json_encode($sub).")";
     }
 
     public function analyst_project_detail_userinfo(Request $request)
@@ -37,8 +37,8 @@ class ZhuanjiaController extends Controller
         }else{
             $sub['data']['fangan'] = array();
         }
-        print_r($sub);
-        return $sub;
+        $callback = Input::get('callback');
+        return  $callback."(".\GuzzleHttp\json_encode($sub).")";
     }
 
 

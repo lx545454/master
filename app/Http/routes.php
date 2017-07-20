@@ -31,7 +31,7 @@ $app->group(['prefix' => 'api/v1'], function($app)
     $app->post('recharge','PayController@recharge');
 
     $app->post('lunbotu','IndexController@lunbotu');
-    $app->get('push2app','PushController@push');
+    $app->post('push2app','PushController@push');
     $app->post('get_current_period','FactoryController@super');
     $app->post('get_dlt_example','FactoryController@super');
     $app->post('get_lottery_list','FactoryController@super');
@@ -57,7 +57,7 @@ $app->group(['prefix' => 'api/v1'], function($app)
     $app->post('analyst_user_attentionLists','FactoryController@super');
     $app->post('analyst_comment_lists','FactoryController@super');
 
-    $app->post('analyst_user_detail_userinfo','ZhuanjiaController@analyst_user_detail_userinfo');
-    $app->post('analyst_project_detail_userinfo','ZhuanjiaController@analyst_project_detail_userinfo');
+    $app->get('analyst_user_detail_userinfo','ZhuanjiaController@analyst_user_detail_userinfo');
+    $app->get('analyst_project_detail_userinfo','ZhuanjiaController@analyst_project_detail_userinfo');
 
 });

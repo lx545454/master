@@ -15,12 +15,13 @@ class BasicMiddleware {
         $url = $request->server()['REDIRECT_URL'];
         $app = app();
         $routes = $app->getRoutes();
-
         $key = $method.$url;
         if (!isset($routes[$key])) {
             return UtilityHelper::showError(Code::HTTP_REQUEST_METHOD_ERROR);
         }
-
+        if($method == "GET"){
+            return $next($request);
+        }
 		$sign = $request->input('sign');
 		$params = $log = Input::get();
 		//剔除sign
