@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Advice;
 use App\Lunbotu;
 use App\Lib\Code;
 use App\Lib\UtilityHelper;
@@ -38,6 +39,19 @@ class IndexController extends Controller
         $data['gonggao'] = $xiaoxi;
 
         return UtilityHelper::renderJson($data, 0, '');
+    }
+
+    public function advice_add(Request $request)
+    {
+        $sub_data['content'] = $request->input('content');
+        $sub_data['userid']= $request->input('userid');
+        if (in_array('', $sub_data)) {
+            return UtilityHelper::showError(Code::HTTP_REQUEST_PARAM_ERROR);
+        }
+
+        $sub = Advice::query()->insertGetId($sub_data);
+        return UtilityHelper::renderJson($sub);
+
     }
 
 }

@@ -59,6 +59,7 @@ $app->group(['prefix' => 'api/v1'], function($app)
     $app->post('analyst_project_moreLists','FactoryController@super');
 
     $app->post('get_version','AppController@get_version');
+    $app->post('advice_add','IndexController@advice_add');
 
     $app->get('h5_analyst_attention_add','ZhuanjiaController@h5_analyst_attention_add');
     $app->get('analyst_user_detail_userinfo','ZhuanjiaController@analyst_user_detail_userinfo');
