@@ -52,6 +52,7 @@ class Request
         'analyst_user_fansLists' => array("API_CZD",'analyst/user/fansLists','post'),
         'analyst_user_attentionLists' => array("API_CZD",'analyst/user/attentionLists','post'),
         'analyst_comment_lists' => array("API_CZD",'analyst/comment/lists','post'),
+        'analyst_project_moreLists' => array("API_CZD",'analyst/project/moreLists','post'),
 
 
     );
