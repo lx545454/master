@@ -19,6 +19,7 @@ class BasicMiddleware {
         if (!isset($routes[$key])) {
             return UtilityHelper::showError(Code::HTTP_REQUEST_METHOD_ERROR);
         }
+        $ip = $request->getClientIp();
         if($method == "GET"){
             return $next($request);
         }
