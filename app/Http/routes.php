@@ -58,6 +58,8 @@ $app->group(['prefix' => 'api/v1'], function($app)
     $app->post('analyst_comment_lists','FactoryController@super');
     $app->post('analyst_project_moreLists','FactoryController@super');
 
+    $app->post('get_version','AppController@get_version');
+
     $app->get('analyst_user_detail_userinfo','ZhuanjiaController@analyst_user_detail_userinfo');
     $app->get('analyst_project_detail_userinfo','ZhuanjiaController@analyst_project_detail_userinfo');
 

@@ -4,14 +4,14 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Submit extends Model
+class App_version extends Model
 {
     /**
      * 与模型关联的数据表
      *
      * @var string
      */
-    protected $table = 'submit';
+    protected $table = 'app_version';
 
     /**
      * The attributes that are mass assignable.
@@ -19,7 +19,7 @@ class Submit extends Model
      * @var array
      */
     protected $fillable = [
-        'f_id', 'u_id', 'form_content', 'is_agree', 'processing_time'
+        'm_type','merchant', 'version', 'content'
     ];
 
     /**
