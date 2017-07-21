@@ -41,5 +41,13 @@ class ZhuanjiaController extends Controller
         return  $callback."(".\GuzzleHttp\json_encode($sub).")";
     }
 
+    public function h5_analyst_attention_add(Request $request)
+    {
+        $sub_data = Input::get();
+        $sub = REQ::requset_all('analyst_attention_add','form',$sub_data);
+
+        $callback = Input::get('callback');
+        return  $callback."(".\GuzzleHttp\json_encode($sub).")";
+    }
 
 }

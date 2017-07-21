@@ -60,6 +60,7 @@ $app->group(['prefix' => 'api/v1'], function($app)
 
     $app->post('get_version','AppController@get_version');
 
+    $app->get('h5_analyst_attention_add','ZhuanjiaController@h5_analyst_attention_add');
     $app->get('analyst_user_detail_userinfo','ZhuanjiaController@analyst_user_detail_userinfo');
     $app->get('analyst_project_detail_userinfo','ZhuanjiaController@analyst_project_detail_userinfo');
 
