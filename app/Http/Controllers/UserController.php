@@ -25,10 +25,10 @@ class UserController extends Controller
     }
     public function login(Request $request)
     {
-        $sub_data['mobile'] = $request->input('mobile', '13817715315');
+        $sub_data['mobile'] = $request->input('mobile', '');
         $sub_data['merchant_id'] = $request->input('merchant_id', '');
         $sub_data['verify_code'] = $request->input('verify_code', '888888');
-        $data_zj = ['userid' => $sub_data['mobile']];
+        $data_zj = ['userid' => $sub_data['mobile'],'avatar'=>'http://yisuancai-cdn.oss-cn-zhangjiakou.aliyuncs.com/userhead/default.png'];
         REQ::requset_all('analyst_user_update','form',$data_zj);
         $sub = REQ::requset_all('user/login','form',$sub_data);
         return $sub;
