@@ -15,18 +15,22 @@ class ZhuanjiaController extends Controller
     {
         $sub_data = Input::get();
         $sub = array('data'=>array());
+        //添加方案
+        $fangan = REQ::requset_all('analyst_user_recommendProject','form',$sub_data);
+
         if(!Input::get('type')){
             $sub = REQ::requset_all('analyst_user_detail','form',$sub_data);
         }
-        //添加方案
-        $fangan = REQ::requset_all('analyst_user_recommendProject','form',$sub_data);
-        if(isset($fangan['data']['word_data'])){
-            $sub['data']['fangan'] = $fangan['data']['word_data'];
+
+        if(isset($sub['data']['word_data'])){
+            $fangan['data']['fangan'] = $fangan['data']['word_data'];
+            $fangan['data']['word_data'] = $sub['data']['word_data'];
         }else{
-            $sub['data']['fangan'] = array();
+            $fangan['data']['fangan'] = $fangan['data']['word_data'];
+            unset($fangan['data']['word_data']);
         }
         $callback = Input::get('callback');
-        return  $callback."(".\GuzzleHttp\json_encode($sub).")";
+        return  $callback."(".\GuzzleHttp\json_encode($fangan).")";
     }
 
     public function analyst_project_detail_userinfo(Request $request)
