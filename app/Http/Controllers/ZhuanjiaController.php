@@ -14,7 +14,10 @@ class ZhuanjiaController extends Controller
     public function analyst_user_detail_userinfo(Request $request)
     {
         $sub_data = Input::get();
-        $sub = REQ::requset_all('analyst_user_detail','form',$sub_data);
+        $sub = array('data'=>array());
+        if(!Input::get('type')){
+            $sub = REQ::requset_all('analyst_user_detail','form',$sub_data);
+        }
         //添加方案
         $fangan = REQ::requset_all('analyst_user_recommendProject','form',$sub_data);
         if(isset($fangan['data']['word_data'])){
@@ -29,16 +32,9 @@ class ZhuanjiaController extends Controller
     public function analyst_project_detail_userinfo(Request $request)
     {
         $sub_data = Input::get();
+        $sub = REQ::requset_all('analyst_user_detail','form',$sub_data);
         //添加方案
         $fangan = REQ::requset_all('analyst_project_detail','form',$sub_data);
-
-        if(!Input::get('type')){
-            $sub = REQ::requset_all('analyst_user_detail','form',$sub_data);
-        }else{
-            $sub = array('data'=>array());
-        }
-
-
         if(isset($fangan['data']['word_data'])){
             $sub['data']['fangan'] = $fangan['data']['word_data'];
         }else{
