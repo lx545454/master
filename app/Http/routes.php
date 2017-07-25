@@ -58,6 +58,7 @@ $app->group(['prefix' => 'api/v1'], function($app)
     $app->post('analyst_comment_lists','FactoryController@super');
     $app->post('analyst_project_moreLists','FactoryController@super');
     $app->post('send_verify_code','FactoryController@super');
+    $app->post('get_order_info','FactoryController@super');
 
     $app->post('get_version','AppController@get_version');
     $app->post('advice_add','IndexController@advice_add');

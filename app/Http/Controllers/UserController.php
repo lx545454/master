@@ -9,20 +9,6 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-
-    public function sendVerifyCode(Request $request)
-    {
-        $sub_data['mobile'] = $request->input('mobile', '13817715315');
-//        $sub_data['verify_code'] = $request->input('sverify_code', '888888');
-        $sub_data['sign'] = UtilityHelper::createSign($sub_data);
-//        if (in_array('', $sub_data)) {
-//            return UtilityHelper::showError(Code::HTTP_REQUEST_PARAM_ERROR);
-//        }
-
-        $sub = REQ::requset_all('user/send_verify_code','json',$sub_data);
-        print_r($sub);die;
-        return UtilityHelper::renderJson($sub);
-    }
     public function login(Request $request)
     {
         $sub_data['mobile'] = $request->input('mobile', '');

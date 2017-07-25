@@ -26,6 +26,7 @@ class Request
         'user/realname_authentication' => array("API_LM",'user/realname_authentication','post'),//实名认证
         'user/set_trade_password' => array("API_LM",'user/set_trade_password','post'),
         'send_verify_code' => array("API_LM",'user/send_verify_code','post'),
+        'get_order_info' => array("API_LM",'merchant/get_lottery_order','post'),
         //支付
         'pay/recharge' => array("API_LM",'pay/recharge','post'),
         //彩票
