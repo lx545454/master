@@ -68,5 +68,8 @@ $app->group(['prefix' => 'api/v1'], function($app)
     $app->get('analyst_project_like','FactoryController@super_h5');
     $app->get('analyst_user_detail_userinfo','ZhuanjiaController@analyst_user_detail_userinfo');
     $app->get('analyst_project_detail_userinfo','ZhuanjiaController@analyst_project_detail_userinfo');
+    $app->get('get_lottery_order','FactoryController@super_h5');
+    $app->get('get_order_info','FactoryController@super_h5');
+    $app->get('get_user_flow','FactoryController@super_h5');
 
 });
