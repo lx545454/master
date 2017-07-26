@@ -27,6 +27,7 @@ class Request
         'user/set_trade_password' => array("API_LM",'user/set_trade_password','post'),
         'send_verify_code' => array("API_LM",'user/send_verify_code','post'),
         'get_order_info' => array("API_LM",'merchant/get_lottery_order','post'),
+        'get_user_flow' => array("API_LM",'user/get_user_flow','post'),
         //支付
         'pay/recharge' => array("API_LM",'pay/recharge','post'),
         //彩票

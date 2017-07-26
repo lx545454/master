@@ -59,11 +59,13 @@ $app->group(['prefix' => 'api/v1'], function($app)
     $app->post('analyst_project_moreLists','FactoryController@super');
     $app->post('send_verify_code','FactoryController@super');
     $app->post('get_order_info','FactoryController@super');
+    $app->post('get_user_flow','FactoryController@super');
 
     $app->post('get_version','AppController@get_version');
     $app->post('advice_add','IndexController@advice_add');
 
     $app->get('h5_analyst_attention_add','ZhuanjiaController@h5_analyst_attention_add');
+    $app->get('analyst_project_like','FactoryController@super_h5');
     $app->get('analyst_user_detail_userinfo','ZhuanjiaController@analyst_user_detail_userinfo');
     $app->get('analyst_project_detail_userinfo','ZhuanjiaController@analyst_project_detail_userinfo');
 

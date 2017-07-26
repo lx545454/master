@@ -19,5 +19,14 @@ class FactoryController extends Controller
         return $sub;
     }
 
+    public function super_h5(Request $request)
+    {
+        $sub_data = Input::get();
+        $url = str_replace('/api/v1/','',$request->server()['REDIRECT_URL']);
+        $sub = REQ::requset_all($url,'form',$sub_data);
+
+        $callback = Input::get('callback');
+        return  $callback."(".\GuzzleHttp\json_encode($sub).")";
+    }
 
 }
