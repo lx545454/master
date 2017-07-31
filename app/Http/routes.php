@@ -60,6 +60,7 @@ $app->group(['prefix' => 'api/v1'], function($app)
     $app->post('send_verify_code','FactoryController@super');
     $app->post('get_order_info','FactoryController@super');
     $app->post('get_user_flow','FactoryController@super');
+    $app->post('get_qiniu_token','FactoryController@super');
 
     $app->post('get_version','AppController@get_version');
     $app->post('advice_add','IndexController@advice_add');
@@ -71,5 +72,8 @@ $app->group(['prefix' => 'api/v1'], function($app)
     $app->get('get_lottery_order','FactoryController@super_h5');
     $app->get('get_order_info','FactoryController@super_h5');
     $app->get('get_user_flow','FactoryController@super_h5');
+
+    $app->get('caipiao_query','FactoryController@super_js');
+    $app->get('get_caipiao_list','FactoryController@super_js');
 
 });

@@ -29,4 +29,17 @@ class FactoryController extends Controller
         return  $callback."(".\GuzzleHttp\json_encode($sub).")";
     }
 
+    public function super_js(Request $request)
+    {
+        $sub_data = Input::get();
+        $sub_data['appkey'] = env('JS_APPKEY');
+        $url = str_replace('/api/v1/','',$request->server()['REDIRECT_URL']);
+        $sub = REQ::requset_all($url,'form',$sub_data);
+        print_r($sub);
+        if(isset($sub['status']) && $sub['status'] == "0"){
+            $sub = $sub['result'];
+        }
+        return UtilityHelper::renderJson($sub);
+    }
+
 }

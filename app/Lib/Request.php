@@ -29,6 +29,7 @@ class Request
         'send_verify_code' => array("API_LM",'user/send_verify_code','post'),
         'get_order_info' => array("API_LM",'merchant/get_lottery_order','post'),
         'get_user_flow' => array("API_LM",'user/get_user_flow','post'),
+        'get_qiniu_token' => array("API_LM",'qiniu/get_qiniu_token','post'),
         //支付
         'pay/recharge' => array("API_LM",'pay/recharge','post'),
         //彩票
@@ -57,6 +58,8 @@ class Request
         'analyst_user_attentionLists' => array("API_CZD",'analyst/user/attentionLists','post'),
         'analyst_comment_lists' => array("API_CZD",'analyst/comment/lists','post'),
         'analyst_project_moreLists' => array("API_CZD",'analyst/project/moreLists','post'),
+
+        'caipiao_query' => array("API_JS",'caipiao/query','post'),
 
 
     );
