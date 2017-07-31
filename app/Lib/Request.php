@@ -59,6 +59,7 @@ class Request
         'analyst_comment_lists' => array("API_CZD",'analyst/comment/lists','post'),
         'analyst_project_moreLists' => array("API_CZD",'analyst/project/moreLists','post'),
 
+        //极速
         'caipiao_query' => array("API_JS",'caipiao/query','post'),
 
 

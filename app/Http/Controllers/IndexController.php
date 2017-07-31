@@ -54,4 +54,24 @@ class IndexController extends Controller
 
     }
 
+    public function get_caipiao_list(Request $request)
+    {
+        $sub_data['caipiaoids'] = "11 12 14 16";
+        $sub_data['appkey'] = env('JS_APPKEY');
+        $cpArr = explode(' ',$sub_data['caipiaoids']);
+        $subArr = [];
+        foreach ($cpArr as $k=>$v){
+            $param = [
+                'appkey'=>$sub_data['appkey'],
+                'caipiaoid' => $v,
+            ];
+            $res = REQ::requset_all('caipiao_query','form',$param);
+            if(isset($res['status']) && $res['status'] == "0"){
+                $subArr[] = $res['result'];
+            }
+        }
+        return UtilityHelper::renderJson($subArr);
+
+    }
+
 }

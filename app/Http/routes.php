@@ -73,7 +73,7 @@ $app->group(['prefix' => 'api/v1'], function($app)
     $app->get('get_order_info','FactoryController@super_h5');
     $app->get('get_user_flow','FactoryController@super_h5');
 
-    $app->get('caipiao_query','FactoryController@super_js');
-    $app->get('get_caipiao_list','FactoryController@super_js');
+    $app->post('caipiao_query','FactoryController@super_js');
+    $app->post('get_caipiao_list','IndexController@get_caipiao_list');
 
 });
