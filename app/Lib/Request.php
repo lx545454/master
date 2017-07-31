@@ -62,6 +62,7 @@ class Request
 
         //极速
         'caipiao_query' => array("API_JS",'caipiao/query','post'),
+        'caipiao_history' => array("API_JS",'caipiao/history','post'),
 
 
     );
