@@ -30,6 +30,7 @@ class Request
         'get_order_info' => array("API_LM",'merchant/get_lottery_order','post'),
         'get_user_flow' => array("API_LM",'user/get_user_flow','post'),
         'get_qiniu_token' => array("API_LM",'qiniu/get_qiniu_token','post'),
+        'edit_user_info' => array("API_LM",'user/edit_user_info','post'),
         //支付
         'pay/recharge' => array("API_LM",'pay/recharge','post'),
         //彩票
