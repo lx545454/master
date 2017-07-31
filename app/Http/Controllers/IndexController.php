@@ -70,7 +70,7 @@ class IndexController extends Controller
                 $subArr[] = $res['result'];
             }
         }
-        return UtilityHelper::renderJson($subArr);
+        return UtilityHelper::renderJson(['data' => $subArr]);
 
     }
 
