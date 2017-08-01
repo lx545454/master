@@ -8,7 +8,7 @@ use App\Lib\UtilityHelper;
 use App\Lib\Request as REQ;
 use App\Xiaoxi;
 use Illuminate\Http\Request;
-
+use App\Lib\Caipiao;
 class IndexController extends Controller
 {
 
@@ -67,6 +67,7 @@ class IndexController extends Controller
             ];
             $res = REQ::requset_all('caipiao_query','form',$param);
             if(isset($res['status']) && $res['status'] == "0"){
+                $res['result']['lottery_code'] = Caipiao::getLotteryCode($res['result']['caipiaoid']);
                 $subArr[] = $res['result'];
             }
         }
