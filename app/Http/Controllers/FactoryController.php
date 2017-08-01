@@ -41,6 +41,7 @@ class FactoryController extends Controller
         }
         $sub_data['appkey'] = env('JS_APPKEY');
         $url = str_replace('/api/v1/','',$request->server()['REDIRECT_URL']);
+        $url = str_replace("jsonp_","",$url);
         $sub = REQ::requset_all($url,'form',$sub_data);
         if(isset($sub['status']) && $sub['status'] == "0"){
             $sub = $sub['result'];
