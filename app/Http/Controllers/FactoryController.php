@@ -32,6 +32,13 @@ class FactoryController extends Controller
     public function super_js(Request $request)
     {
         $sub_data = Input::get();
+        $page = Input::get("page","0");
+        $num = Input::get("num","10");
+        if($page){
+            if($page > 0){
+                $sub_data['start'] = ($page-1)*$num;
+            }
+        }
         $sub_data['appkey'] = env('JS_APPKEY');
         $url = str_replace('/api/v1/','',$request->server()['REDIRECT_URL']);
         $sub = REQ::requset_all($url,'form',$sub_data);
