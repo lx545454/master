@@ -70,6 +70,12 @@ class IndexController extends Controller
                 $subArr[] = $res['result'];
             }
         }
+        $url = str_replace('/api/v1/','',$request->server()['REDIRECT_URL']);
+        $_url = substr($url,0,6);
+        if($_url == "jsonp_"){
+            $callback = $request->input('callback');
+            return  $callback."(".\GuzzleHttp\json_encode(['data' => $subArr]).")";
+        }
         return UtilityHelper::renderJson(['data' => $subArr]);
     }
 

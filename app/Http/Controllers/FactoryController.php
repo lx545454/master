@@ -38,6 +38,12 @@ class FactoryController extends Controller
         if(isset($sub['status']) && $sub['status'] == "0"){
             $sub = $sub['result'];
         }
+        $url = str_replace('/api/v1/','',$request->server()['REDIRECT_URL']);
+        $_url = substr($url,0,6);
+        if($_url == "jsonp_"){
+            $callback = $request->input('callback');
+            return  $callback."(".\GuzzleHttp\json_encode($sub).")";
+        }
         return UtilityHelper::renderJson($sub);
     }
 
