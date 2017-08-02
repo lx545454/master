@@ -19,6 +19,7 @@ $app->group(['prefix' => 'api/v1'], function($app)
     $app->post('sendVerifyCode','UserController@sendVerifyCode');
     $app->post('login','UserController@login');
     $app->post('user-info','UserController@userInfo');
+    $app->get('user-info','UserController@userInfo');
     $app->post('add_bank_card','UserController@add_bank_card');
     $app->post('bet','PayController@bet');
     $app->post('delete_bank_card','UserController@delete_bank_card');
@@ -62,6 +63,7 @@ $app->group(['prefix' => 'api/v1'], function($app)
     $app->post('get_order_info','FactoryController@super');
     $app->post('get_user_flow','FactoryController@super');
     $app->post('get_qiniu_token','FactoryController@super');
+    $app->post('user_apply_cash','FactoryController@super');
 
     $app->post('get_version','AppController@get_version');
     $app->post('advice_add','IndexController@advice_add');

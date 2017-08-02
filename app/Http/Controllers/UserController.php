@@ -95,6 +95,11 @@ class UserController extends Controller
             $data_m = $money['data'];
         }
         $sub['data'] = $sub['data']+$data_m;
+        $method = $request->method();
+        if($method == "GET"){
+            $callback = $request->input('callback');
+            return  $callback."(".\GuzzleHttp\json_encode($sub).")";
+        }
         return $sub;
     }
 
