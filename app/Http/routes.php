@@ -26,6 +26,7 @@ $app->group(['prefix' => 'api/v1'], function($app)
     $app->post('get_account_balance','UserController@get_account_balance');
     $app->post('get_bank_card_list','UserController@get_bank_card_list');
     $app->post('get_lottery_order','FactoryController@super');
+    $app->get('get_lottery_order','FactoryController@super_h5');
     $app->post('realname_authentication','UserController@realname_authentication');
     $app->post('set_trade_password','UserController@set_trade_password');
 
