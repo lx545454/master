@@ -44,6 +44,7 @@ class UserController extends Controller
     {
         $sub_data['user_token'] = $request->input('user_token', '');
         $sub_data['merchant_id'] = $request->input('merchant_id', '');
+
         $sub = REQ::requset_all('user/'.__FUNCTION__,'form',$sub_data);
         return $sub;
     }
@@ -60,6 +61,7 @@ class UserController extends Controller
     {
         $sub_data['user_token'] = $request->input('user_token', '');
         $sub_data['merchant_id'] = $request->input('merchant_id', '');
+        $sub_data['state'] = $request->input('state', '');
         $sub = REQ::requset_all('user/'.__FUNCTION__,'form',$sub_data);
         return $sub;
     }
