@@ -19,7 +19,8 @@ class IndexController extends Controller
 //        $name = $request->input('name');
         $data = array(
             'lunbo'=>array(),
-            'gonggao'=>array()
+            'gonggao'=>array(),
+            'caipiao'=>array(),
         );
         $pageSize = $request->input('pageSize', 10);
         $page = $request->input('page', 1);
@@ -37,6 +38,7 @@ class IndexController extends Controller
         $xiaoxi = $query_xiaoxi->get()->toArray();
         $data['lunbo'] = $lunbo;
         $data['gonggao'] = $xiaoxi;
+        $data['caipiao'] = $this->get_caipiao_arr();
 
         return UtilityHelper::renderJson($data, 0, '');
     }
@@ -56,6 +58,17 @@ class IndexController extends Controller
 
     public function get_caipiao_list(Request $request)
     {
+        $subArr = $this->get_caipiao_arr();
+        $url = str_replace('/api/v1/','',$request->server()['REDIRECT_URL']);
+        $_url = substr($url,0,6);
+        if($_url == "jsonp_"){
+            $callback = $request->input('callback');
+            return  $callback."(".\GuzzleHttp\json_encode(['data' => $subArr]).")";
+        }
+        return UtilityHelper::renderJson(['data' => $subArr]);
+    }
+
+    public function get_caipiao_arr(){
         $sub_data['caipiaoids'] = "11 12 14 16";
         $sub_data['appkey'] = env('JS_APPKEY');
         $cpArr = explode(' ',$sub_data['caipiaoids']);
@@ -71,13 +84,7 @@ class IndexController extends Controller
                 $subArr[] = $res['result'];
             }
         }
-        $url = str_replace('/api/v1/','',$request->server()['REDIRECT_URL']);
-        $_url = substr($url,0,6);
-        if($_url == "jsonp_"){
-            $callback = $request->input('callback');
-            return  $callback."(".\GuzzleHttp\json_encode(['data' => $subArr]).")";
-        }
-        return UtilityHelper::renderJson(['data' => $subArr]);
+        return $subArr;
     }
 
 }
