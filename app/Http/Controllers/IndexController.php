@@ -9,6 +9,7 @@ use App\Lib\Request as REQ;
 use App\Xiaoxi;
 use Illuminate\Http\Request;
 use App\Lib\Caipiao;
+use Cache;
 class IndexController extends Controller
 {
 
@@ -69,6 +70,9 @@ class IndexController extends Controller
     }
 
     public function get_caipiao_arr(){
+        if (app('cache')->has('caipiao_list')) {
+            return app('cache')->get('caipiao_list');
+        }
         $sub_data['caipiaoids'] = "11 12 14 16";
         $sub_data['appkey'] = env('JS_APPKEY');
         $cpArr = explode(' ',$sub_data['caipiaoids']);
@@ -84,6 +88,7 @@ class IndexController extends Controller
                 $subArr[] = $res['result'];
             }
         }
+        app('cache')->put('caipiao_list',$subArr,60);
         return $subArr;
     }
 
