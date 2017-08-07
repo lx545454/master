@@ -70,6 +70,9 @@ class Request
 
     public static function requset_all($key,$type,$params,$sign_key="SIGN_KEY"){
         $params['timestamp'] = date('Ymdhis');
+        if(isset($params['merchant_id'])&&$params['merchant_id']=='22015'){
+            $sign_key = "QIANYUN";
+        }
         $params['sign'] = UtilityHelper::createSign_lm($params,$sign_key);
 
         if(isset(self::$arr[$key])){

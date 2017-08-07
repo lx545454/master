@@ -20,7 +20,7 @@ class UtilityHelper {
         ksort($data);			//先排序
         $params = urldecode(http_build_query($data)); // 转为字符串
         $secretKey = env($key); //辅助密钥
-        $sign = md5($params.$secretKey); //组合两个字符串后，MD5加密
+        $sign = md5($params . $secretKey); //组合两个字符串后，MD5加密
         return $sign;
     }
 
