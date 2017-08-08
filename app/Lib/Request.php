@@ -32,6 +32,7 @@ class Request
         'get_qiniu_token' => array("API_LM",'qiniu/get_qiniu_token','post'),
         'edit_user_info' => array("API_LM",'user/edit_user_info','post'),
         'user_apply_cash' => array("API_LM",'user/user_apply_cash','post'),
+        'get_merchant' => array("API_LM",'merchant/get_merchant','post'),
         //支付
         'pay/recharge' => array("API_LM",'pay/recharge','post'),
         //彩票

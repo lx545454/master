@@ -30,6 +30,7 @@ $app->group(['prefix' => 'api/v1'], function($app)
     $app->post('realname_authentication','UserController@realname_authentication');
     $app->post('set_trade_password','UserController@set_trade_password');
 
+
     $app->post('recharge','PayController@recharge');
 
     $app->post('lunbotu','IndexController@lunbotu');
@@ -78,6 +79,8 @@ $app->group(['prefix' => 'api/v1'], function($app)
     $app->get('get_lottery_order','FactoryController@super_h5');
     $app->get('get_order_info','FactoryController@super_h5');
     $app->get('get_user_flow','FactoryController@super_h5');
+    $app->get('get_merchant','FactoryController@super_h5');
+    $app->post('get_merchant','FactoryController@super');
 
     $app->post('caipiao_query','FactoryController@super_js');
     $app->post('caipiao_history','FactoryController@super_js');
