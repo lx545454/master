@@ -94,6 +94,6 @@ $app->group(['prefix' => 'api/v1'], function($app)
     $app->post('ssc_addqici','SscController@add_qici');
     $app->post('ssc_update','SscController@update');
 
-    $app->post('start_swoole','SwooleController@index');
+    $app->get('start_swoole','SwooleController@index');
 
 });
