@@ -89,6 +89,17 @@ class UtilityHelper {
         return response()->json($json_arr);
     }
 
+    public static function showErrorMess($errmsg) {
+//        header("Content-type: application/json");
+//        $data = json_encode(array());
+//        die('{"errcode":'.$code.',"errmsg":"'.$errmsg.'","total":'.$total.',"data":'.$data.'}');
+        $json_arr['error_code'] = 1;
+        $json_arr['error_msg'] = $errmsg;
+//        $json_arr['total'] = 0;
+        $json_arr['data'] = array();
+        return response()->json($json_arr);
+    }
+
     public static function objToArray($object) {
         $object =  json_decode( json_encode( $object),true);
         return $object;
