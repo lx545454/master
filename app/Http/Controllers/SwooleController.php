@@ -14,6 +14,7 @@ class SwooleController extends Controller
 
     public function index()
     {
+        phpinfo();
         //创建websocket服务器对象，监听0.0.0.0:9502端口
         $ws = new \swoole_server("0.0.0.0", 9502);
 
