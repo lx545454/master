@@ -1,7 +1,7 @@
 <?php
+use App\Http\Controllers\SscController;
 
 $ws = new Swoole\Websocket\Server("0.0.0.0", 9502);
-$ssc = new SscController();
 $ws->on('Open', function($ws, $req) {
     $res = SscController::get_qici();
     $ws->push($req->fd, json_encode($res));
