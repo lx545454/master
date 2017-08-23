@@ -1,5 +1,5 @@
 <?php
-use App\Http\Controllers\SscController;
+use \App\Http\Controllers\SscController;
 
 $ws = new Swoole\Websocket\Server("0.0.0.0", 9502);
 $ws->on('Open', function($ws, $req) {
