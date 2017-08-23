@@ -24,27 +24,8 @@ $ws->on('message', function ($ws, $frame) {
 //function onWorkerStart(swoole_server $serv, $worker_id)
 $ws->on('WorkerStart', function ($ws, $worker_id) {
     if (!$ws->taskworker && 0 == $worker_id) {
-        $ws->tick(500, function () use ($ws, $worker_id) {
-            if ($res = Lot::getKaijiang()) {
-                foreach($ws->connections as $fd) {
-                    //发送信息
-                    $ws->push($fd, json_encode(['return_type' => 'new_lot', 'return_data' => ['code' => 0, 'msg' => 'success', 'data' => $res['lot_new']]]));
-                }
-            }
-            if ($res = Issue::getNewIssue()) {
-                foreach($ws->connections as $fd) {
-                    //发送信息
-                    $ws->push($fd, json_encode(['return_type' => 'new_issue', 'return_data' => ['code' => 0, 'msg' => 'success', 'data' => $res]]));
-                }
-            }
-        });
         $ws->tick(30000, function () use ($ws, $worker_id) {
-            if ($res = Lot::getBet()) {
-                foreach($ws->connections as $fd) {
-                    //发送信息
-                    $ws->push($fd, json_encode(['return_type' => 'bet_stat', 'return_data' => ['code' => 0, 'msg' => 'success', 'data' => $res]]));
-                }
-            }
+            echo "ssd";
         });
     }
 });
