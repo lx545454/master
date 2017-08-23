@@ -14,13 +14,13 @@ class SscController extends Controller
 {
 
 
-    public function update(Request $request)
+    public function update($request=[])
     {
-        $playType = $request->input('playType','');
-        $number = $request->input('number','');
-        $beishu = $request->input('beishu','');
-        $qici = $request->input('qici','');
-        $money = $request->input('money','');
+        $playType = $request['playType'] ?? "";
+        $number = $request['number'] ?? "";
+        $beishu = $request['beishu'] ?? "";
+        $qici = $request['qici'] ?? "";
+        $money = $request['money'] ?? "";
         //判断期次是否存在
         $res = DB::table('game_ssc')->where('qici',$qici)->where('state',1)->first();
         if(!$res){
@@ -88,6 +88,190 @@ class SscController extends Controller
                     return H::showErrorMess("投注格式错误：需要五位数以逗号分隔");
                 }
 
+                break;
+            case "103":
+                $location  = ['0'=>'shi','1'=>'ge','2'=>'bai','3'=>'qian','4'=>'wan'];
+                $data = explode('-',$number);
+                if(count($data)==1){
+                    foreach ($location as $k1=>$v1){
+                        foreach ($location as $k2=>$v2){
+                            if($k1<$k2){
+                                DB::table($tableName)->where($v1,$data[0])->where($v2,$data[0])->update([
+                                    'num' => DB::raw("num + {$beishu}*100000/1000"),
+                                    'zong' => DB::raw("zong + 100000/1000"),//参与人数与倍数无关
+                                ]);
+                            }
+                        }
+                    }
+                }elseif (count($data)>1 && count($data)<6){
+                    foreach ($location as $k1=>$v1){
+                        foreach ($location as $k2=>$v2){
+                            if($k1<$k2){
+                                foreach ($data as $k3=>$v3){
+                                    foreach ($data as $k4=>$v4){
+                                        if($k3!=$k4){
+                                            DB::table($tableName)->where($v1,$v3)->where($v2,$v4)->update([
+                                                'num' => DB::raw("num + {$beishu}*100000/1000"),
+                                                'zong' => DB::raw("zong + 100000/1000"),//参与人数与倍数无关
+                                            ]);
+                                        }
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                }else{
+                    return  H::showErrorMess("投注格式错误：任二圈只能投入1-5位数");
+                }
+                break;
+            case "104":
+                $location  = $value =  [];
+                $data = explode(',',$number);
+                if(count($data)>1){
+                    foreach ($data as $k=>$v) {
+                        if ($v == "_") {
+                            continue;
+                        }
+                        $p = $this->getLocationBykey($k);
+                        if($p){
+                            $location[] = $p;
+                            $value[] = $v;
+                        }else{
+                            return  H::showErrorMess("投注格式错误：超出5位数");
+                        }
+                    }
+                    $count = count($location);
+                    switch ($count){
+                        case 1:
+                            DB::table($tableName)->where($location[0],$value[0])->update([
+                                'num' => DB::raw("num + {$beishu}*100000*5/10000"),
+                                'zong' => DB::raw("zong + 100000/10000"),//参与人数与倍数无关
+                            ]);
+                            break;
+                        case 2:
+                            DB::table($tableName)->where($location[0],$value[0])->update([
+                                'num' => DB::raw("num + {$beishu}*100000/10000"),
+                                'zong' => DB::raw("zong + 100000/10000"),//参与人数与倍数无关
+                            ]);
+                            DB::table($tableName)->where($location[1],$value[1])->update([
+                                'num' => DB::raw("num + {$beishu}*100000/10000"),
+                                'zong' => DB::raw("zong + 100000/10000"),//参与人数与倍数无关
+                            ]);
+                            DB::table($tableName)->where($location[0],$value[0])->where($location[1],$value[1])->update([
+                                'num' => DB::raw("num + {$beishu}*100000/10000"),
+                                'zong' => DB::raw("zong + 100000/10000"),//参与人数与倍数无关
+                            ]);
+                            break;
+                        case 3:
+                            $pos = strpos($number,'_,_');
+                            if($pos===0){
+                               foreach ($data as $k1=>$v1){
+                                   foreach ($data as $k2=>$v2){
+                                       if($k2!=$k1){
+                                           foreach ($data as $k3=>$v3){
+                                               if($k3 !=$v2 && $k3!=$k1){
+                                                   DB::table($tableName)->where($location[0],$v1)->where($location[1],$v2)->where($location[2],$v3)->update([
+                                                       'num' => DB::raw("num + {$beishu}*100000/100"),
+                                                       'zong' => DB::raw("zong + 100000/100"),//参与人数与倍数无关
+                                                   ]);
+                                               }
+                                           }
+                                       }
+                                   }
+                               }
+                            }
+                            DB::table($tableName)->where($location[0],$value[0])->where($location[1],$value[1])->update([
+                                'num' => DB::raw("num + {$beishu}*100000/1000"),
+                                'zong' => DB::raw("zong + 100000/10000"),//参与人数与倍数无关
+                            ]);
+                            DB::table($tableName)->where($location[0],$value[0])->where($location[2],$value[2])->update([
+                                'num' => DB::raw("num + {$beishu}*100000/1000"),
+                                'zong' => DB::raw("zong + 100000/10000"),//参与人数与倍数无关
+                            ]);
+                            DB::table($tableName)->where($location[1],$value[1])->where($location[2],$value[2])->update([
+                                'num' => DB::raw("num + {$beishu}*100000/1000"),
+                                'zong' => DB::raw("zong + 100000/10000"),//参与人数与倍数无关
+                            ]);
+                            DB::table($tableName)->where($location[0],$value[0])->update([
+                                'num' => DB::raw("num + {$beishu}*100000/10000"),
+                                'zong' => DB::raw("zong + 100000/10000"),//参与人数与倍数无关
+                            ]);
+                            DB::table($tableName)->where($location[1],$value[1])->update([
+                                'num' => DB::raw("num + {$beishu}*100000/10000"),
+                                'zong' => DB::raw("zong + 100000/10000"),//参与人数与倍数无关
+                            ]);
+                            DB::table($tableName)->where($location[2],$value[2])->update([
+                            'num' => DB::raw("num + {$beishu}*100000/10000"),
+                            'zong' => DB::raw("zong + 100000/10000"),//参与人数与倍数无关
+                            ]);
+                            break;
+                        case 4:
+                            $pos = strpos($number,'_');
+                            if($pos===0){
+                                $vArr1 = explode('-',$value[0]);
+                                $vArr2 = explode('-',$value[1]);
+                                $vArr3 = explode('-',$value[2]);
+                                $vArr4 = explode('-',$value[3]);
+                                foreach ($vArr1 as $e1=>$a1){
+                                    foreach ($vArr2 as $e2=>$a2){
+                                        foreach ($vArr3 as $e3=>$a3){
+                                            foreach ($vArr4 as $e4=>$a4){
+                                                DB::table($tableName)->where($location[0],$a1)->where($location[1],$a2)->where($location[2],$a3)->where($location[3],$a4)->update([
+                                                    'num' => DB::raw("num + {$beishu}*10/116"),
+                                                    'zong' => DB::raw("zong + 10/116"),//参与人数与倍数无关
+                                                ]);
+
+                                                DB::table($tableName)->where($location[0],'<>',$a1)->where($location[1],$a2)->where($location[2],$a3)->where($location[3],$a4)->update([
+                                                    'num' => DB::raw("num + {$beishu}*100000/1305"),
+                                                    'zong' => DB::raw("zong + 100000/1305"),//参与人数与倍数无关
+                                                ]);
+
+                                                DB::table($tableName)->where($location[0],$a1)->where($location[1],$a2)->where($location[2],$a3)->where($location[3],'<>',$a4)->update([
+                                                    'num' => DB::raw("num + {$beishu}*100000/1305"),
+                                                    'zong' => DB::raw("zong + 100000/1305"),//参与人数与倍数无关
+                                                ]);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            foreach ($value as $k1=>$v1){
+                                foreach ($value as $k2=>$v2){
+                                    if($k1<$k2){
+                                        DB::table($tableName)->where($location[$k1],$v1)->where($location[$k2],$v2)->update([
+                                            'num' => DB::raw("num + {$beishu}*100000/1000"),
+                                            'zong' => DB::raw("zong + 100000/10000"),//参与人数与倍数无关
+                                        ]);
+                                    }
+                                }
+                                DB::table($tableName)->where($location[$k1],$v1)->update([
+                                    'num' => DB::raw("num + {$beishu}*100000/10000"),
+                                    'zong' => DB::raw("zong + 100000/10000"),//参与人数与倍数无关
+                                ]);
+                            }
+
+                            break;
+                        case 5:
+                            DB::table($tableName)->where($location[0],$value[0])->where($location[1],$value[1])->where($location[2],$value[2])->where($location[3],$value[3])->where($location[4],$value[4])->update([
+                                'num' => DB::raw("num + {$beishu}*1"),
+                                'zong' => DB::raw("zong + 1"),//参与人数与倍数无关
+                                'big' => DB::raw("big + 1"),//参与人数与倍数无关
+                            ]);
+                            foreach ($value as $k1=>$v1){
+                                DB::table($tableName)->where($location[$k1],$v1)->update([
+                                    'num' => DB::raw("num + {$beishu}*100000/10000"),
+                                    'zong' => DB::raw("zong + 100000/10000"),//参与人数与倍数无关
+                                ]);
+                            }
+                            break;
+                    }
+
+
+                }
+                else{
+                    return H::showErrorMess("投注格式错误：需要五位数以逗号分隔");
+                }
                 break;
             case "11":
                 $data = explode(',',$number);
@@ -670,9 +854,8 @@ class SscController extends Controller
 
         return H::renderJson([], 0, '投注成功');
     }
-    public function getNum(Request $request){
-        $data = [];
-        $qici = $request->input('qici','');
+    public function getNum($request = []){
+        $qici = $request['qici'] ?? "";
         $ssc = DB::table('game_ssc')->where('qici',$qici)->first();
         if($ssc && isset($ssc->qici)){
             $tableName = 'dicofnum_'.$qici;
@@ -688,15 +871,17 @@ class SscController extends Controller
 
     }
 
-    public function add_qici(Request $request){
-//        $qici = $request->input('qici','');
-        $peilv = $request->input('peilv','');
-//        if(!$qici){
-//            return H::showErrorMess("qici不能为空");
-//        }
-        if(!$peilv){
-            return H::showErrorMess("peilv不能为空");
+    public function get_qici($request = []){
+        $ssc = DB::table('game_ssc')->where('state',1)->first();
+        if($ssc){
+            return H::renderJson($ssc);
+        }else{
+            return $this->add_qici();
         }
+    }
+
+    public function add_qici($request=[]){
+        $peilv = "58";
         $ssc = DB::table('game_ssc')->orderBy('id','desc')->first();
 
         if($ssc && isset($ssc->qici)){

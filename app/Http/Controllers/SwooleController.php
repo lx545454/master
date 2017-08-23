@@ -14,9 +14,8 @@ class SwooleController extends Controller
 
     public function index()
     {
-        echo "sss";
         //创建websocket服务器对象，监听0.0.0.0:9502端口
-        $ws = new \Swoole\Websocket\Server("0.0.0.0", 9502);
+        $ws = new Swoole\Websocket\Server("0.0.0.0", 9502);
 
         //监听WebSocket连接打开事件
         $ws->on('open', function ($ws, $request) {
