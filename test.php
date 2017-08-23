@@ -1,6 +1,4 @@
 <?php
-use App\Http\Controllers\SscController;
-include_once("app/Http/Controllers/SscController.php");
 
 $ws = new Swoole\Websocket\Server("0.0.0.0", 9502);
 $ssc = new SscController();

@@ -14,38 +14,24 @@ class SwooleController extends Controller
 
     public function index()
     {
-        //创建websocket服务器对象，监听0.0.0.0:9502端口
         $ws = new Swoole\Websocket\Server("0.0.0.0", 9502);
-
-        //监听WebSocket连接打开事件
-        $ws->on('open', function ($ws, $request) {
-            $ws->push($request->fd, json_encode(['data'=>"dsds"]));
+        $ssc = new SscController();
+        $ws->on('Open', function($ws, $req) {
+            $res = SscController::get_qici();
+            $ws->push($req->fd, json_encode($res));
         });
 
-        //监听WebSocket消息事件
+    //监听WebSocket消息事件
         $ws->on('message', function ($ws, $frame) {
             $data = json_decode($frame->data, true);
             if (!empty($data)) {
-                if ('stat' == $data['service']) {
-                    $res = Lot::getNewStatGx115();
-                    $ws->push($frame->fd, json_encode(['return_type' => 'stat', 'return_data' => ['code' => 0, 'msg' => 'success', 'data' => $res]]));
-                } elseif ('history' == $data['service']) {
-                    $res = Lot::getHistoryCode($data['data']);
-                    $ws->push($frame->fd, json_encode(['return_type' => 'history', 'return_data' => ['code' => 0, 'msg' => 'success', 'data' => $res]]));
-                } elseif ('pool' == $data['service']) {
-                    $res = Lot::getLotPool();
-                    $ws->push($frame->fd, json_encode(['return_type' => 'pool', 'return_data' => ['code' => 0, 'msg' => 'success', 'data' => $res]]));
-                } elseif ('exponent' == $data['service']) {
-                    $res = Lot::getLotExponent();
-                    $ws->push($frame->fd, json_encode(['return_type' => 'exponent', 'return_data' => ['code' => 0, 'msg' => 'success', 'data' => $res]]));
-                } elseif ('win' == $data['service']) {
-                    $res = Lot::getLotWin();
-                    $ws->push($frame->fd, json_encode(['return_type' => 'win', 'return_data' => ['code' => 0, 'msg' => 'success', 'data' => $res]]));
-                } elseif ('new_issue' == $data['service']) {
-                    $res = Issue::getLastIssue();
-                    $ws->push($frame->fd, json_encode(['return_type' => 'new_issue', 'return_data' => ['code' => 0, 'msg' => 'success', 'data' => $res]]));
+                if ('bet' == $data['service']) {
+                    $res = SscController::update($data['data']);
+                } elseif ('get_num' == $data['service']) {
+                    $res = SscController::getnum();
                 }
             }
+            $ws->push($frame->fd, $res);
             echo "Message: {$frame->data}\n";
         });
 
