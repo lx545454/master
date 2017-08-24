@@ -876,8 +876,10 @@ class SscController extends Controller
         if($ssc){
             return H::renderJson($ssc);
         }else{
-            return $this->add_qici();
+            $this->add_qici();
+            $ssc = DB::table('game_ssc')->where('state',1)->first();
         }
+        return H::renderJson($ssc);
     }
 
     public function add_qici($request=[]){

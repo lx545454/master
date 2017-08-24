@@ -42,7 +42,7 @@ class SwooleCommand extends Command
         $ws->on('Open', function($ws, $req) {
             $ssc = new SscController();
             $res = $ssc->get_qici();
-            $ws->push($req->fd, json_encode($res));
+            $ws->push($req->fd, $res);
         });
 
 //监听WebSocket消息事件
