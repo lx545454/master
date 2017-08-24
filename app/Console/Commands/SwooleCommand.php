@@ -38,7 +38,7 @@ class SwooleCommand extends Command
      */
     public function handle()
     {
-        $ws = new Swoole\Websocket\Server("0.0.0.0", 9502);
+        $ws = new \Swoole\Websocket\Server("0.0.0.0", 9502);
         $ws->on('Open', function($ws, $req) {
             $ssc = new SscController();
             $res = $ssc->get_qici();
