@@ -55,8 +55,11 @@ class SwooleCommand extends Command
                 } elseif ('get_num' == $data['service']) {
                     $res = $ssc->getnum();
                 }
+                $ws->push($frame->fd, $res);
+            }else{
+                echo "kong";
             }
-            $ws->push($frame->fd, $res);
+
             echo "Message: {$frame->data}\n";
         });
 
