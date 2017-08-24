@@ -72,11 +72,6 @@ class SwooleCommand extends Command
             }
         });
 
-        $ws->on('Message', function($server, $frame) {
-            echo "message: ".$frame->data;
-            $server->push($frame->fd, "sssddd");
-        });
-
         $ws->on('Close', function($server, $fd) {
             echo "connection close: ".$fd;
         });
