@@ -856,7 +856,6 @@ class SscController extends Controller
         return H::renderJson([], 0, '投注成功');
     }
     public function getNum($request = []){
-        return "dsds";
         $qici = $request['qici'] ?? "";
         $ssc = DB::table('game_ssc')->where('qici',$qici)->first();
 
