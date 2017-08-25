@@ -862,6 +862,7 @@ class SscController extends Controller
             $tableName = 'dicofnum_'.$qici;
             $limitMoney = ($ssc->peilv*$ssc->money/100 - rand(0,20))*100000/58000;//用100000来规避小数类型
             $numRes = DB::table($tableName)->whereBetween('num', [$limitMoney-100, $limitMoney])->first();
+            return \GuzzleHttp\json_encode($numRes);
             if(!isset($numRes->wan)){
                 $numRes = DB::table($tableName)->where('num', '<', $limitMoney)->orderBy('id',"DESC")->first();
             }
