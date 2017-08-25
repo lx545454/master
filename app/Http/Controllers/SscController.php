@@ -858,7 +858,7 @@ class SscController extends Controller
     public function getNum($request = []){
         $qici = $request['qici'] ?? "";
         $ssc = DB::table('game_ssc')->where('qici',$qici)->first();
-
+        return $qici."yy";
         if($ssc && isset($ssc->qici)){
             $tableName = 'dicofnum_'.$qici;
             $limitMoney = ($ssc->peilv*$ssc->money/100 - rand(0,20))*100000/58000;//用100000来规避小数类型
