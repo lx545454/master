@@ -21,6 +21,7 @@ class SscController extends Controller
         $beishu = $request['beishu'] ?? "";
         $qici = $request['qici'] ?? "";
         $money = $request['money'] ?? "";
+        $uid = $request['uid'] ?? "";
         //判断期次是否存在
         $res = DB::table('game_ssc')->where('qici',$qici)->where('state',1)->first();
         if(!$res){
@@ -861,11 +862,11 @@ class SscController extends Controller
             $tableName = 'dicofnum_'.$qici;
             $limitMoney = ($ssc->peilv*$ssc->money/100 - rand(0,20))*100000/58000;//用100000来规避小数类型
             $numRes = DB::table($tableName)->whereBetween('num', [$limitMoney-100, $limitMoney])->first();
-            if($numRes && isset($numRes->wan)){
-                $data = ['number'=>$numRes->wan.','.$numRes->qian.','.$numRes->bai.','.$numRes->shi.','.$numRes->ge];
-                return H::renderJson($data, 0,"第{$numRes->qici}期开奖结果");
+            if(!isset($numRes->wan)){
+                $numRes = DB::table($tableName)->where('num', '<', $limitMoney)->orderBy('id',"DESC")->first();
             }
-
+            $data = ['number'=>$numRes->wan.','.$numRes->qian.','.$numRes->bai.','.$numRes->shi.','.$numRes->ge];
+            return H::renderJson($data, 0,"第{$numRes->qici}期开奖结果");
         }
 
 
