@@ -866,7 +866,7 @@ class SscController extends Controller
                 $numRes = DB::table($tableName)->where('num', '<', $limitMoney)->orderBy('id',"DESC")->first();
             }
             $data = ['number'=>$numRes->wan.','.$numRes->qian.','.$numRes->bai.','.$numRes->shi.','.$numRes->ge];
-            return H::renderJson($data, 0,"第{$numRes->qici}期开奖结果");
+            return H::renderJson($data, 0,"第{$qici}期开奖结果");
         }else{
             return H::showErrorMess("未传入期次或其次不存在");
         }
