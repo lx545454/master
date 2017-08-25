@@ -53,8 +53,7 @@ class SwooleCommand extends Command
                 if ('bet' == $data['service']) {
                     $res = $ssc->update($data['data']);
                 } elseif ('get_num' == $data['service']) {
-                    $res = $ssc->getnum();
-                    echo $res;
+                    $res = $ssc->getnum($data['data']);
                 }
                 $ws->push($frame->fd, $res);
             }else{
