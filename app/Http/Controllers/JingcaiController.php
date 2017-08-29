@@ -18,7 +18,7 @@ class JingcaiController extends Controller
         if($res['result']['@attributes']['desc'] ?? ""){
             $data =  $res['body']['rows']['row'];
         }
-        return UtilityHelper::renderJson($data);
+        return UtilityHelper::renderJson(['data'=>$data]);
     }
     public function analyst_user_detail_userinfo(Request $request)
     {
