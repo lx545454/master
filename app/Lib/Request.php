@@ -66,6 +66,8 @@ class Request
         'caipiao_query' => array("API_JS",'caipiao/query','post'),
         'caipiao_history' => array("API_JS",'caipiao/history','post'),
 
+        //竞猜
+        'jingcai' => array("API_JC",'test/test.go',"post")
 
     );
 
@@ -122,6 +124,35 @@ class Request
         return self::request($method,$url, $params,$options);
     }
 
+    public static function request_xml($body,$cmd){
+        $url = env("API_JC");
+        $message_id = date('YmdHis').mt_rand(100000, 999999); //请求流水号必须保证唯一
+
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>
+            <request>
+            <head sid="'.$cmd.'" agent="4007" messageid="'.$message_id.'" timestamp="'.date('Y-m-d H:i:s').'" memo="" />
+            <body>
+            '.$body.'
+            </body>
+            </request>';
+
+        $sign = md5($xml.'123456');
+        $data = 'xml='.$xml.'&sign='.$sign;
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST,true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+
+        if (!empty($options)){
+            curl_setopt_array($ch, $options);
+        }
+        $data = curl_exec($ch);
+        curl_close($ch);
+        return json_decode(json_encode((array) simplexml_load_string($data)), true);
+    }
+
     public static function request($method,$url, $params = [],$options = [])
     {
         $client = new \GuzzleHttp\Client();
@@ -141,7 +172,7 @@ class Request
 //            Log::info('BD response: '.$res->getBody());
             $data = \json_decode($res->getBody(), true);
             Log::info('outLog',['url'=>$url,'option'=>$options,'data'=>$data]);
-//            dd($url, $options, $data);
+            dd($url, $options, $data);
 
             return $data;
         }

@@ -90,10 +90,11 @@ $app->group(['prefix' => 'api/v1'], function($app)
     $app->get('jsonp_caipiao_query','FactoryController@super_js');
     $app->get('jsonp_caipiao_history','FactoryController@super_js');
 
-    $app->post('ssc_getnum','SscController@getnum');
-    $app->post('ssc_addqici','SscController@add_qici');
-    $app->post('ssc_update','SscController@update');
+    $app->post('ssc_getnum','FactoryController@link');
+    $app->post('ssc_addqici','FactoryController@link');
+    $app->post('ssc_update','FactoryController@link');
 
-    $app->get('start_swoole','SwooleController@index');
+    $app->post('jc_duizhen','JingcaiController@duizhen');
+
 
 });

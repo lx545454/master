@@ -7,6 +7,7 @@ use App\Lib\UtilityHelper;
 use App\Lib\Request as REQ;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use App\Http\Controllers\SscController;
 
 class FactoryController extends Controller
 {
@@ -55,4 +56,34 @@ class FactoryController extends Controller
         return UtilityHelper::renderJson($sub);
     }
 
+    public function link(Request $request)
+    {
+        $sub_data = Input::get();
+        $url = str_replace('/api/v1/ssc_','',$request->server()['REDIRECT_URL']);
+        $res = SscController::$url($sub_data);
+        return $res;
+    }
+
+    public function getLocationBykey($k){
+        switch ($k){
+            case 0:
+                return "wan";
+                break;
+            case 1:
+                return "qian";
+                break;
+            case 2:
+                return "bai";
+                break;
+            case 3:
+                return "shi";
+                break;
+            case 4:
+                return "ge";
+                break;
+            default:
+                return false;
+
+        }
+    }
 }

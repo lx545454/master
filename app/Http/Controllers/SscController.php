@@ -9,6 +9,7 @@ use App\Lib\Request as REQ;
 use App\Xiaoxi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Lib\ssc;
 
 class SscController extends Controller
 {
@@ -37,7 +38,7 @@ class SscController extends Controller
                        if($v == "_"){
                           continue;
                        }
-                       $param = $this->getLocationBykey($k);
+                       $param = ssc::getLocationBykey($k);
                        if(!$param){
                            return  H::showErrorMess("投注格式错误：超出5位数");
                        }
@@ -64,7 +65,7 @@ class SscController extends Controller
                         if ($v == "_") {
                             continue;
                         }
-                        $p = $this->getLocationBykey($k);
+                        $p = ssc::getLocationBykey($k);
                         if($p){
                             $location[] = $p;
                             $value[] = $v;
@@ -134,7 +135,7 @@ class SscController extends Controller
                         if ($v == "_") {
                             continue;
                         }
-                        $p = $this->getLocationBykey($k);
+                        $p = ssc::getLocationBykey($k);
                         if($p){
                             $location[] = $p;
                             $value[] = $v;
@@ -320,7 +321,7 @@ class SscController extends Controller
                                 return  H::showErrorMess("投注格式错误：二星直选只能传入个位和十位");
                             }
                         }
-                        $p = $this->getLocationBykey($k);
+                        $p = ssc::getLocationBykey($k);
                         if($p){
                             $location[] = $p;
                             $value[] = $v;
@@ -365,7 +366,7 @@ class SscController extends Controller
                                 return  H::showErrorMess("投注格式错误：二星直选只能传入个位和十位");
                             }
                         }
-                        $p = $this->getLocationBykey($k);
+                        $p = ssc::getLocationBykey($k);
                         if($p){
                             $location[] = $p;
                             $value[] = $v;
@@ -512,7 +513,7 @@ class SscController extends Controller
                                 return  H::showErrorMess("投注格式错误：三星直选只能传入个位和十位和百位");
                             }
                         }
-                        $p = $this->getLocationBykey($k);
+                        $p = ssc::getLocationBykey($k);
                         if($p){
                             $location[] = $p;
                             $value[] = $v;
@@ -562,7 +563,7 @@ class SscController extends Controller
                                 return  H::showErrorMess("投注格式错误：三星直选只能传入个位和十位和百位");
                             }
                         }
-                        $p = $this->getLocationBykey($k);
+                        $p = ssc::getLocationBykey($k);
                         if($p){
                             $location[] = $p;
                             $value[] = $v;
@@ -621,7 +622,7 @@ class SscController extends Controller
                                 return  H::showErrorMess("投注格式错误：四星直选只能传入个位和十位和百位和千位");
                             }
                         }
-                        $p = $this->getLocationBykey($k);
+                        $p = ssc::getLocationBykey($k);
                         if($p){
                             $location[] = $p;
                             $value[] = $v;
@@ -686,7 +687,7 @@ class SscController extends Controller
                                 return  H::showErrorMess("投注格式错误：四星直选只能传入个位和十位和百位和千位");
                             }
                         }
-                        $p = $this->getLocationBykey($k);
+                        $p = ssc::getLocationBykey($k);
                         if($p){
                             $location[] = $p;
                             $value[] = $v;
@@ -743,7 +744,7 @@ class SscController extends Controller
                                 return  H::showErrorMess("投注格式错误：五星直选只能传入个位和十位和百位和千位和万位");
                             }
                         }
-                        $p = $this->getLocationBykey($k);
+                        $p = ssc::getLocationBykey($k);
                         if($p){
                             $location[] = $p;
                             $value[] = $v;
@@ -793,7 +794,7 @@ class SscController extends Controller
                                 return  H::showErrorMess("投注格式错误：五星直选只能传入个位和十位和百位和千位和万位");
                             }
                         }
-                        $p = $this->getLocationBykey($k);
+                        $p = ssc::getLocationBykey($k);
                         if($p){
                             $location[] = $p;
                             $value[] = $v;
