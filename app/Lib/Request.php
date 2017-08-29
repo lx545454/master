@@ -172,7 +172,7 @@ class Request
 //            Log::info('BD response: '.$res->getBody());
             $data = \json_decode($res->getBody(), true);
             Log::info('outLog',['url'=>$url,'option'=>$options,'data'=>$data]);
-            dd($url, $options, $data);
+//            dd($url, $options, $data);
 
             return $data;
         }
