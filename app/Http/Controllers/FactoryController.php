@@ -64,26 +64,5 @@ class FactoryController extends Controller
         return $res;
     }
 
-    public function getLocationBykey($k){
-        switch ($k){
-            case 0:
-                return "wan";
-                break;
-            case 1:
-                return "qian";
-                break;
-            case 2:
-                return "bai";
-                break;
-            case 3:
-                return "shi";
-                break;
-            case 4:
-                return "ge";
-                break;
-            default:
-                return false;
 
-        }
-    }
 }
