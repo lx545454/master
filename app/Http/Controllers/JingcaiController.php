@@ -7,6 +7,7 @@ use App\Lib\UtilityHelper;
 use App\Lib\Request as REQ;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\DB;
 
 class JingcaiController extends Controller
 {
@@ -20,6 +21,76 @@ class JingcaiController extends Controller
         }
         return UtilityHelper::renderJson(['data'=>$data]);
     }
+
+    public function jczq(){
+        $data = [];
+        $lastone = DB::table('jczq')->orderBy('matchcode','desc')->first();
+        //判断缓存是否有效
+        if (app('cache')->has('jczq_lasttime')) {
+            $lasttime = app('cache')->get('jczq_lasttime');
+            if($lastone->created_at==$lasttime){
+                $data = app('cache')->get('jczq_lastdata');
+            }
+        }
+
+        if(!$data){
+            $zq = DB::table('jczq')->where('created_at',$lastone->created_at)->get();
+            $zq = json_decode(json_encode($zq), true);
+            $dateArr = [];
+            $data = [];
+            if($zq){
+                $count = count($zq);
+                app('cache')->put('jczq_lastcount',$count,60*12);
+                foreach ($zq as $k=>&$v){
+                    if($v['content']){
+                        $v['content'] =preg_replace("/\s/","",$v['content']);
+                        $qian = array('半全场单关胜胜','胜','平','负',',,');
+                        $hou = array('',',',',',',',',');
+                        $v['bqc'] = str_replace($qian,$hou,$v['content']);
+                        $v['cbf'] = "";
+                        $v['jqs'] = "";
+                        $v['hh'] = "";
+                        $v['gh'] = "";
+                        for ($i=1;$i<=31;$i++){
+                            $v['cbf'].=$v['bf'.$i].',';
+                        }
+                        $v['cbf'] = substr($v['cbf'],0,-1);
+                        for ($i=32;$i<=39;$i++){
+                            $v['jqs'].=$v['bf'.$i].',';
+                        }
+                        $v['jqs'] = substr($v['jqs'],0,-1);
+                        for ($i=1;$i<=5;$i++){
+                            $v['hh'].=$v['h'.$i].',';
+                        }
+                        $v['hh'] = substr($v['hh'],0,-1);
+                        for ($i=1;$i<=5;$i++){
+                            $v['gh'].=$v['v'.$i].',';
+                        }
+                        $v['gh'] = substr($v['gh'],0,-1);
+                    }
+                    if(!in_array($v['date'],$dateArr)){
+                        $dateArr[] = $v['date'];
+                    }
+                    if($k==0){
+                        $data[$v['date']]['week'] = substr($v['name'],0,-3);
+                        $data[$v['date']]['date'] = $v['date'];
+                    }
+                    $data[$v['date']]['list'][] = $v;
+                    //缓存最后时间
+                    if($k=$count-1){
+                        app('cache')->put('jczq_lasttime',$v['created_at'],60*12);
+                    }
+
+                }
+                app('cache')->put('jczq_lastdata',$data,60*12);
+            }
+        }
+
+
+
+        return UtilityHelper::renderJson(['data'=>$data]);
+    }
+
     public function analyst_user_detail_userinfo(Request $request)
     {
         $sub_data = Input::get();
