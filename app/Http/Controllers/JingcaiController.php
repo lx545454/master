@@ -24,7 +24,7 @@ class JingcaiController extends Controller
 
     public function jczq(){
         $data = [];
-        $lastone = DB::table('jczq')->orderBy('matchcode','desc')->first();
+        $lastone = DB::table('jczq')->orderBy('created_at','desc')->first();
         //判断缓存是否有效
         if (app('cache')->has('jczq_lasttime')) {
             $lasttime = app('cache')->get('jczq_lasttime');
@@ -76,12 +76,17 @@ class JingcaiController extends Controller
                         $data[$v['date']]['date'] = $v['date'];
                     }
                     $data[$v['date']]['list'][] = $v;
+
                     //缓存最后时间
                     if($k=$count-1){
                         app('cache')->put('jczq_lasttime',$v['created_at'],60*12);
                     }
-
                 }
+                $ARR = [];
+                foreach ($dateArr as $k=>$v){
+                    $ARR[] = $data[$v];
+                }
+                $data = $ARR;
                 app('cache')->put('jczq_lastdata',$data,60*12);
             }
         }
