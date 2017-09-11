@@ -67,6 +67,9 @@ class JingcaiController extends Controller
                             $v['gh'].=$v['v'.$i].',';
                         }
                         $v['gh'] = substr($v['gh'],0,-1);
+
+                        $v['spf'] = $v['bet3'].','.$v['bet1'].','.$v['bet0'];
+                        $v['rspf'] = $v['rang3'].','.$v['rang1'].','.$v['rang0'];
                     }
                     if(!in_array($v['date'],$dateArr)){
                         $dateArr[] = $v['date'];
