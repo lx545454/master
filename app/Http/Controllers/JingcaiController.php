@@ -70,6 +70,9 @@ class JingcaiController extends Controller
 
                         $v['spf'] = $v['bet3'].','.$v['bet1'].','.$v['bet0'];
                         $v['rspf'] = $v['rang3'].','.$v['rang1'].','.$v['rang0'];
+
+//                        $harr = explode(':',$v['hvhistory']);
+//                        $v['hvh'] = $harr[1];
                     }
                     if(!in_array($v['date'],$dateArr)){
                         $dateArr[] = $v['date'];
@@ -81,7 +84,7 @@ class JingcaiController extends Controller
                     $data[$v['date']]['list'][] = $v;
 
                     //缓存最后时间
-                    if($k=$count-1){
+                    if($k==($count-1)){
                         app('cache')->put('jczq_lasttime',$v['created_at'],60*12);
                     }
                 }
@@ -98,6 +101,54 @@ class JingcaiController extends Controller
 
         return UtilityHelper::renderJson(['data'=>$data]);
     }
+
+    public function sfc(){
+        $data = [];
+        $lastone = DB::table('sfc')->orderBy('created_at','desc')->first();
+        //判断缓存是否有效
+        if (app('cache')->has('sfc_lasttime')) {
+                $lasttime = app('cache')->get('sfc_lasttime');
+            if($lastone->created_at==$lasttime){
+                $data = app('cache')->get('sfc_lastdata');
+            }
+        }
+
+        if(!$data){
+            $zq = DB::table('sfc')->where('created_at',$lastone->created_at)->get();
+            $zq = json_decode(json_encode($zq), true);
+            $dateArr = [];
+            $data = [];
+            if($zq){
+                $count = count($zq);
+                foreach ($zq as $k=>&$v){
+                    for ($i=1;$i<=5;$i++){
+                        $v['hh'].=$v['h'.$i].',';
+                    }
+                    $v['hh'] = substr($v['hh'],0,-1);
+                    for ($i=1;$i<=5;$i++){
+                        $v['gh'].=$v['v'.$i].',';
+                    }
+                    $v['gh'] = substr($v['gh'],0,-1);
+
+                    if(!in_array($v['date'],$dateArr)){
+                        $dateArr[] = $v['date'];
+                    }
+                    $data[] = $v;
+
+                    //缓存最后时间
+                    if($k==($count-1)){
+                        app('cache')->put('sfc_lasttime',$v['created_at'],60*12);
+                    }
+                }
+                app('cache')->put('sfc_lastdata',$data,60*12);
+            }
+        }
+
+
+
+        return UtilityHelper::renderJson(['data'=>$data]);
+    }
+
 
     public function analyst_user_detail_userinfo(Request $request)
     {
