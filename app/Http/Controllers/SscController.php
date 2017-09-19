@@ -23,10 +23,19 @@ class SscController extends Controller
         $qici = $request['qici'] ?? "";
         $money = $request['money'] ?? "";
         $uid = $request['uid'] ?? "";
+
         //判断期次是否存在
         $res = DB::table('game_ssc')->where('qici',$qici)->where('state',1)->first();
         if(!$res){
             return H::showErrorMess("期次({$qici})不存在或已经结束");
+        }
+
+        if($uid){
+            DB::table('ssc_order')->insert(
+                ['uid'=>$uid,'number'=>$number,'playType'=>$playType,'beishu'=>$beishu,'qici'=>$qici,'money'=>$money]
+            );
+        }else{
+            return H::showErrorMess("需要传入用户信息");
         }
         $tableName = 'dicofnum_'.$qici;
         $zhushu = 0;
@@ -894,7 +903,8 @@ class SscController extends Controller
             $qici = $ssc->qici +1;
             $res = DB::table("game_ssc")->insert([
                 'qici'=>$qici,
-                'peilv'=>$peilv
+                'peilv'=>$peilv,
+                'state'=>'1',
             ]);
             if($res){
                 $createRes = DB::select("call insert_test_val('{$qici}');");

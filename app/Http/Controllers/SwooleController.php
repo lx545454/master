@@ -29,6 +29,8 @@ class SwooleController extends Controller
                     $res = SscController::update($data['data']);
                 } elseif ('get_num' == $data['service']) {
                     $res = SscController::getnum();
+                }elseif ('get_qici' == $data['service']) {
+                    $res = SscController::get_qici();
                 }
             }
             $ws->push($frame->fd, $res);

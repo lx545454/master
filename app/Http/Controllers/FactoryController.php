@@ -59,8 +59,9 @@ class FactoryController extends Controller
     public function link(Request $request)
     {
         $sub_data = Input::get();
+        $ssc = new SscController();
         $url = str_replace('/api/v1/ssc_','',$request->server()['REDIRECT_URL']);
-        $res = SscController::$url($sub_data);
+        $res = $ssc->$url($sub_data);
         return $res;
     }
 
