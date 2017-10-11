@@ -102,5 +102,7 @@ $app->group(['prefix' => 'api/v1'], function($app)
     $app->post('jc_jczq','JingcaiController@jczq');
     $app->post('jc_sfc','JingcaiController@sfc');
     $app->get('jc_sfc','JingcaiController@sfc');
+    $app->get('jc_dc','JingcaiController@dc');
+    $app->post('jc_dc','JingcaiController@dc');
 
 });

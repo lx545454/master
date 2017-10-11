@@ -149,51 +149,271 @@ class JingcaiController extends Controller
         return UtilityHelper::renderJson(['data'=>$data]);
     }
 
-
-    public function analyst_user_detail_userinfo(Request $request)
-    {
-        $sub_data = Input::get();
-        $sub = array('data'=>array());
-        //添加方案
-        $fangan = REQ::requset_all('analyst_user_recommendProject','form',$sub_data);
-
-        if(!Input::get('type')){
-            $sub = REQ::requset_all('analyst_user_detail','form',$sub_data);
+    public function dc_spf(){
+        $data = [];
+        $lastone = DB::table('dg_sf')->orderBy('created_at','desc')->first();
+        //判断缓存是否有效
+        if (app('cache')->has('dg_sf_lasttime')) {
+                $lasttime = app('cache')->get('dg_sf_lasttime');
+            if($lastone->created_at==$lasttime){
+                $data = app('cache')->get('dg_sf_lastdata');
+            }
         }
 
-        if(isset($sub['data']['word_data'])){
-            $fangan['data']['fangan'] = $fangan['data']['word_data'];
-            $fangan['data']['word_data'] = $sub['data']['word_data'];
-        }else{
-            $fangan['data']['fangan'] = $fangan['data']['word_data'];
-            unset($fangan['data']['word_data']);
+        if(!$data){
+            $zq = DB::table('dg_sf')->where('created_at',$lastone->created_at)->get();
+            $zq = json_decode(json_encode($zq), true);
+            $dateArr = [];
+            $data = [];
+            if($zq){
+                $count = count($zq);
+                foreach ($zq as $k=>&$v){
+                    for ($i=1;$i<=5;$i++){
+                        $v['hh'].=$v['h'.$i].',';
+                    }
+                    $v['hh'] = substr($v['hh'],0,-1);
+                    for ($i=1;$i<=5;$i++){
+                        $v['gh'].=$v['v'.$i].',';
+                    }
+                    $v['gh'] = substr($v['gh'],0,-1);
+
+                    if(!in_array($v['date'],$dateArr)){
+                        $dateArr[] = $v['date'];
+                    }
+                    $data[] = $v;
+
+                    //缓存最后时间
+                    if($k==($count-1)){
+                        app('cache')->put('dg_sf_lasttime',$v['created_at'],60*12);
+                    }
+                }
+                app('cache')->put('dg_sf_lastdata',$data,60*12);
+            }
         }
-        $callback = Input::get('callback');
-        return  $callback."(".\GuzzleHttp\json_encode($fangan).")";
+
+
+
+        return $data;
     }
 
-    public function analyst_project_detail_userinfo(Request $request)
-    {
-        $sub_data = Input::get();
-        $sub = REQ::requset_all('analyst_user_detail','form',$sub_data);
-        //添加方案
-        $fangan = REQ::requset_all('analyst_project_detail','form',$sub_data);
-        if(isset($fangan['data']['word_data'])){
-            $sub['data']['fangan'] = $fangan['data']['word_data'];
-        }else{
-            $sub['data']['fangan'] = array();
+    public function dc_bf(){
+        $data = [];
+        $lastone = DB::table('dg_bf')->orderBy('created_at','desc')->first();
+        //判断缓存是否有效
+        if (app('cache')->has('dg_bf_lasttime')) {
+            $lasttime = app('cache')->get('dg_bf_lasttime');
+            if($lastone->created_at==$lasttime){
+                $data = app('cache')->get('dg_bf_lastdata');
+            }
         }
-        $callback = Input::get('callback');
-        return  $callback."(".\GuzzleHttp\json_encode($sub).")";
+
+        if(!$data){
+            $zq = DB::table('dg_bf')->where('created_at',$lastone->created_at)->get();
+            $zq = json_decode(json_encode($zq), true);
+            $dateArr = [];
+            $data = [];
+            if($zq){
+                $count = count($zq);
+                foreach ($zq as $k=>&$v){
+                    for ($i=1;$i<=5;$i++){
+                        $v['hh'].=$v['h'.$i].',';
+                    }
+                    $v['hh'] = substr($v['hh'],0,-1);
+                    for ($i=1;$i<=5;$i++){
+                        $v['gh'].=$v['v'.$i].',';
+                    }
+                    $v['gh'] = substr($v['gh'],0,-1);
+
+                    $v['cbf'] = "";
+                    for ($i=0;$i<=24;$i++){
+                        $v['cbf'].=$v['bf'.($i+10)].',';
+                    }
+                    $v['cbf'] = substr($v['cbf'],0,-1);
+                    if(!in_array($v['date'],$dateArr)){
+                        $dateArr[] = $v['date'];
+                    }
+                    $data[] = $v;
+
+                    //缓存最后时间
+                    if($k==($count-1)){
+                        app('cache')->put('dg_bf_lasttime',$v['created_at'],60*12);
+                    }
+                }
+                app('cache')->put('dg_bf_lastdata',$data,60*12);
+            }
+        }
+
+
+
+        return $data;
     }
 
-    public function h5_analyst_attention_add(Request $request)
-    {
-        $sub_data = Input::get();
-        $sub = REQ::requset_all('analyst_attention_add','form',$sub_data);
+    public function dc_sxds(){
+        $data = [];
+        $lastone = DB::table('dg_sf')->orderBy('created_at','desc')->first();
+        //判断缓存是否有效
+        if (app('cache')->has('dg_sf_lasttime')) {
+            $lasttime = app('cache')->get('dg_sf_lasttime');
+            if($lastone->created_at==$lasttime){
+                $data = app('cache')->get('dg_sf_lastdata');
+            }
+        }
 
-        $callback = Input::get('callback');
-        return  $callback."(".\GuzzleHttp\json_encode($sub).")";
+        if(!$data){
+            $zq = DB::table('dg_sf')->where('created_at',$lastone->created_at)->get();
+            $zq = json_decode(json_encode($zq), true);
+            $dateArr = [];
+            $data = [];
+            if($zq){
+                $count = count($zq);
+                foreach ($zq as $k=>&$v){
+                    for ($i=1;$i<=5;$i++){
+                        $v['hh'].=$v['h'.$i].',';
+                    }
+                    $v['hh'] = substr($v['hh'],0,-1);
+                    for ($i=1;$i<=5;$i++){
+                        $v['gh'].=$v['v'.$i].',';
+                    }
+                    $v['gh'] = substr($v['gh'],0,-1);
+
+                    $v['sxds'] = $v['s1'].','.$v['s2'].','.$v['x1'].','.$v['x2'];
+                    if(!in_array($v['date'],$dateArr)){
+                        $dateArr[] = $v['date'];
+                    }
+                    $data[] = $v;
+
+                    //缓存最后时间
+                    if($k==($count-1)){
+                        app('cache')->put('dg_sf_lasttime',$v['created_at'],60*12);
+                    }
+                }
+                app('cache')->put('dg_sf_lastdata',$data,60*12);
+            }
+        }
+
+
+
+        return $data;
     }
 
+    public function dc_zong(){
+        $data = [];
+        $lastone = DB::table('dg_sf')->orderBy('created_at','desc')->first();
+        //判断缓存是否有效
+        if (app('cache')->has('dg_sf_lasttime')) {
+            $lasttime = app('cache')->get('dg_sf_lasttime');
+            if($lastone->created_at==$lasttime){
+                $data = app('cache')->get('dg_sf_lastdata');
+            }
+        }
+
+        if(!$data){
+            $zq = DB::table('dg_sf')->where('created_at',$lastone->created_at)->get();
+            $zq = json_decode(json_encode($zq), true);
+            $dateArr = [];
+            $data = [];
+            if($zq){
+                $count = count($zq);
+                foreach ($zq as $k=>&$v){
+                    for ($i=1;$i<=5;$i++){
+                        $v['hh'].=$v['h'.$i].',';
+                    }
+                    $v['hh'] = substr($v['hh'],0,-1);
+                    for ($i=1;$i<=5;$i++){
+                        $v['gh'].=$v['v'.$i].',';
+                    }
+                    $v['gh'] = substr($v['gh'],0,-1);
+                    $v['jqs'] = "";
+                    for ($i=1;$i<=8;$i++){
+                        $v['jqs'].=$v['bf'.$i].',';
+                    }
+                    $v['jqs'] = substr($v['jqs'],0,-1);
+
+                    if(!in_array($v['date'],$dateArr)){
+                        $dateArr[] = $v['date'];
+                    }
+                    $data[] = $v;
+
+                    //缓存最后时间
+                    if($k==($count-1)){
+                        app('cache')->put('dg_sf_lasttime',$v['created_at'],60*12);
+                    }
+                }
+                app('cache')->put('dg_sf_lastdata',$data,60*12);
+            }
+        }
+
+
+
+        return $data;
+    }
+    public function dc_ban(){
+        $data = [];
+        $lastone = DB::table('dg_sf')->orderBy('created_at','desc')->first();
+        //判断缓存是否有效
+        if (app('cache')->has('dg_sf_lasttime')) {
+            $lasttime = app('cache')->get('dg_sf_lasttime');
+            if($lastone->created_at==$lasttime){
+                $data = app('cache')->get('dg_sf_lastdata');
+            }
+        }
+
+        if(!$data){
+            $zq = DB::table('dg_sf')->where('created_at',$lastone->created_at)->get();
+            $zq = json_decode(json_encode($zq), true);
+            $dateArr = [];
+            $data = [];
+            if($zq){
+                $count = count($zq);
+                foreach ($zq as $k=>&$v){
+                    for ($i=1;$i<=5;$i++){
+                        $v['hh'].=$v['h'.$i].',';
+                    }
+                    $v['hh'] = substr($v['hh'],0,-1);
+                    for ($i=1;$i<=5;$i++){
+                        $v['gh'].=$v['v'.$i].',';
+                    }
+                    $v['gh'] = substr($v['gh'],0,-1);
+
+                    $v['bqc'] = "";
+                    for ($i=1;$i<=9;$i++){
+                        $v['bqc'].=$v['bf'.$i].',';
+                    }
+                    $v['bqc'] = substr($v['bqc'],0,-1);
+
+                    if(!in_array($v['date'],$dateArr)){
+                        $dateArr[] = $v['date'];
+                    }
+                    $data[] = $v;
+
+                    //缓存最后时间
+                    if($k==($count-1)){
+                        app('cache')->put('dg_sf_lasttime',$v['created_at'],60*12);
+                    }
+                }
+                app('cache')->put('dg_sf_lastdata',$data,60*12);
+            }
+        }
+
+
+
+        return $data;
+    }
+    public function dc(){
+        $dc_sf = $this->dc_spf();
+        $dc_sxds = $this->dc_sxds();
+        $dc_zong = $this->dc_zong();
+        $dc_bf = $this->dc_bf();
+        $dc_ban = $this->dc_ban();
+
+        $data = [
+            'sf'=>$dc_sf,
+            'sxds'=>$dc_sxds,
+            'zong'=>$dc_zong,
+            'bf'=>$dc_bf,
+            'ban'=>$dc_ban,
+        ];
+
+        return UtilityHelper::renderJson($data);
+    }
 }
