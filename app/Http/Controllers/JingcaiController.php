@@ -130,9 +130,6 @@ class JingcaiController extends Controller
                     }
                     $v['gh'] = substr($v['gh'],0,-1);
 
-                    if(!in_array($v['date'],$dateArr)){
-                        $dateArr[] = $v['date'];
-                    }
                     $data[] = $v;
 
                     //缓存最后时间
@@ -177,16 +174,28 @@ class JingcaiController extends Controller
                     }
                     $v['gh'] = substr($v['gh'],0,-1);
 
-                    if(!in_array($v['date'],$dateArr)){
-                        $dateArr[] = $v['date'];
+                    if(!in_array($v['matchcode'],$dateArr)){
+                        $dateArr[] = $v['matchcode'];
+
+                        $dateStr =  str_replace(['年','月','日',' '],['-','-','',''],$v['matchcode']);
+                        $week = date('w',strtotime($dateStr));
+                        $week = str_replace(['0','1','2','3','4','5','6'],['一','二','三','四','五','六','日'],$week);
+                        $data[$v['matchcode']]['week'] = '周'.$week;
+                        $data[$v['matchcode']]['date'] = $v['matchcode'];
                     }
-                    $data[] = $v;
+                    $data[$v['matchcode']]['list'][] = $v;
 
                     //缓存最后时间
                     if($k==($count-1)){
                         app('cache')->put('dg_sf_lasttime',$v['created_at'],60*12);
                     }
                 }
+                $ARR = [];
+                foreach ($dateArr as $k=>$v){
+                    $ARR[] = $data[$v];
+                }
+                $data = $ARR;
+
                 app('cache')->put('dg_sf_lastdata',$data,60*12);
             }
         }
@@ -229,16 +238,30 @@ class JingcaiController extends Controller
                         $v['cbf'].=$v['bf'.($i+10)].',';
                     }
                     $v['cbf'] = substr($v['cbf'],0,-1);
-                    if(!in_array($v['date'],$dateArr)){
-                        $dateArr[] = $v['date'];
+
+                    if(!in_array($v['matchcode'],$dateArr)){
+                        $dateArr[] = $v['matchcode'];
+
+                        $dateStr =  str_replace(['年','月','日',' '],['-','-','',''],$v['matchcode']);
+                        $week = date('w',strtotime($dateStr));
+                        $week = str_replace(['0','1','2','3','4','5','6'],['一','二','三','四','五','六','日'],$week);
+                        $data[$v['matchcode']]['week'] = '周'.$week;
+                        $data[$v['matchcode']]['date'] = $v['matchcode'];
                     }
-                    $data[] = $v;
+                    $data[$v['matchcode']]['list'][] = $v;
 
                     //缓存最后时间
                     if($k==($count-1)){
                         app('cache')->put('dg_bf_lasttime',$v['created_at'],60*12);
                     }
                 }
+
+                $ARR = [];
+                foreach ($dateArr as $k=>$v){
+                    $ARR[] = $data[$v];
+                }
+                $data = $ARR;
+
                 app('cache')->put('dg_bf_lastdata',$data,60*12);
             }
         }
@@ -250,17 +273,17 @@ class JingcaiController extends Controller
 
     public function dc_sxds(){
         $data = [];
-        $lastone = DB::table('dg_sf')->orderBy('created_at','desc')->first();
+        $lastone = DB::table('dg_sxds')->orderBy('created_at','desc')->first();
         //判断缓存是否有效
-        if (app('cache')->has('dg_sf_lasttime')) {
-            $lasttime = app('cache')->get('dg_sf_lasttime');
-            if($lastone->created_at==$lasttime){
-                $data = app('cache')->get('dg_sf_lastdata');
-            }
-        }
+//        if (app('cache')->has('dg_sxds_lasttime')) {
+//            $lasttime = app('cache')->get('dg_sxds_lasttime');
+//            if($lastone->created_at==$lasttime){
+//                $data = app('cache')->get('dg_sxds_lastdata');
+//            }
+//        }
 
         if(!$data){
-            $zq = DB::table('dg_sf')->where('created_at',$lastone->created_at)->get();
+            $zq = DB::table('dg_sxds')->where('created_at',$lastone->created_at)->get();
             $zq = json_decode(json_encode($zq), true);
             $dateArr = [];
             $data = [];
@@ -277,17 +300,29 @@ class JingcaiController extends Controller
                     $v['gh'] = substr($v['gh'],0,-1);
 
                     $v['sxds'] = $v['s1'].','.$v['s2'].','.$v['x1'].','.$v['x2'];
-                    if(!in_array($v['date'],$dateArr)){
-                        $dateArr[] = $v['date'];
+                    if(!in_array($v['matchcode'],$dateArr)){
+                        $dateArr[] = $v['matchcode'];
+
+                        $dateStr =  str_replace(['年','月','日',' '],['-','-','',''],$v['matchcode']);
+                        $week = date('w',strtotime($dateStr));
+                        $week = str_replace(['0','1','2','3','4','5','6'],['一','二','三','四','五','六','日'],$week);
+                        $data[$v['matchcode']]['week'] = '周'.$week;
+                        $data[$v['matchcode']]['date'] = $v['matchcode'];
+
                     }
-                    $data[] = $v;
+                    $data[$v['matchcode']]['list'][] = $v;
 
                     //缓存最后时间
                     if($k==($count-1)){
-                        app('cache')->put('dg_sf_lasttime',$v['created_at'],60*12);
+                        app('cache')->put('dg_sxds_lasttime',$v['created_at'],60*12);
                     }
                 }
-                app('cache')->put('dg_sf_lastdata',$data,60*12);
+                $ARR = [];
+                foreach ($dateArr as $k=>$v){
+                    $ARR[] = $data[$v];
+                }
+                $data = $ARR;
+                app('cache')->put('dg_sxds_lastdata',$data,60*12);
             }
         }
 
@@ -298,17 +333,17 @@ class JingcaiController extends Controller
 
     public function dc_zong(){
         $data = [];
-        $lastone = DB::table('dg_sf')->orderBy('created_at','desc')->first();
+        $lastone = DB::table('dg_zong')->orderBy('created_at','desc')->first();
         //判断缓存是否有效
-        if (app('cache')->has('dg_sf_lasttime')) {
-            $lasttime = app('cache')->get('dg_sf_lasttime');
+        if (app('cache')->has('dg_zong_lasttime')) {
+            $lasttime = app('cache')->get('dg_zong_lasttime');
             if($lastone->created_at==$lasttime){
-                $data = app('cache')->get('dg_sf_lastdata');
+                $data = app('cache')->get('dg_zong_lastdata');
             }
         }
 
         if(!$data){
-            $zq = DB::table('dg_sf')->where('created_at',$lastone->created_at)->get();
+            $zq = DB::table('dg_zong')->where('created_at',$lastone->created_at)->get();
             $zq = json_decode(json_encode($zq), true);
             $dateArr = [];
             $data = [];
@@ -329,17 +364,30 @@ class JingcaiController extends Controller
                     }
                     $v['jqs'] = substr($v['jqs'],0,-1);
 
-                    if(!in_array($v['date'],$dateArr)){
-                        $dateArr[] = $v['date'];
+                    if(!in_array($v['matchcode'],$dateArr)){
+                        $dateArr[] = $v['matchcode'];
+
+                        $dateStr =  str_replace(['年','月','日',' '],['-','-','',''],$v['matchcode']);
+                        $week = date('w',strtotime($dateStr));
+                        $week = str_replace(['0','1','2','3','4','5','6'],['一','二','三','四','五','六','日'],$week);
+                        $data[$v['matchcode']]['week'] = '周'.$week;
+                        $data[$v['matchcode']]['date'] = $v['matchcode'];
                     }
-                    $data[] = $v;
+                    $data[$v['matchcode']]['list'][] = $v;
 
                     //缓存最后时间
                     if($k==($count-1)){
-                        app('cache')->put('dg_sf_lasttime',$v['created_at'],60*12);
+                        app('cache')->put('dg_zong_lasttime',$v['created_at'],60*12);
                     }
                 }
-                app('cache')->put('dg_sf_lastdata',$data,60*12);
+
+                $ARR = [];
+                foreach ($dateArr as $k=>$v){
+                    $ARR[] = $data[$v];
+                }
+                $data = $ARR;
+
+                app('cache')->put('dg_zong_lastdata',$data,60*12);
             }
         }
 
@@ -349,17 +397,17 @@ class JingcaiController extends Controller
     }
     public function dc_ban(){
         $data = [];
-        $lastone = DB::table('dg_sf')->orderBy('created_at','desc')->first();
+        $lastone = DB::table('dg_ban')->orderBy('created_at','desc')->first();
         //判断缓存是否有效
-        if (app('cache')->has('dg_sf_lasttime')) {
-            $lasttime = app('cache')->get('dg_sf_lasttime');
+        if (app('cache')->has('dg_ban_lasttime')) {
+            $lasttime = app('cache')->get('dg_ban_lasttime');
             if($lastone->created_at==$lasttime){
-                $data = app('cache')->get('dg_sf_lastdata');
+                $data = app('cache')->get('dg_ban_lastdata');
             }
         }
 
         if(!$data){
-            $zq = DB::table('dg_sf')->where('created_at',$lastone->created_at)->get();
+            $zq = DB::table('dg_ban')->where('created_at',$lastone->created_at)->get();
             $zq = json_decode(json_encode($zq), true);
             $dateArr = [];
             $data = [];
@@ -381,17 +429,30 @@ class JingcaiController extends Controller
                     }
                     $v['bqc'] = substr($v['bqc'],0,-1);
 
-                    if(!in_array($v['date'],$dateArr)){
-                        $dateArr[] = $v['date'];
+                    if(!in_array($v['matchcode'],$dateArr)){
+                        $dateArr[] = $v['matchcode'];
+
+                        $dateStr =  str_replace(['年','月','日',' '],['-','-','',''],$v['matchcode']);
+                        $week = date('w',strtotime($dateStr));
+                        $week = str_replace(['0','1','2','3','4','5','6'],['一','二','三','四','五','六','日'],$week);
+                        $data[$v['matchcode']]['week'] = '周'.$week;
+                        $data[$v['matchcode']]['date'] = $v['matchcode'];
                     }
-                    $data[] = $v;
+                    $data[$v['matchcode']]['list'][] = $v;
 
                     //缓存最后时间
                     if($k==($count-1)){
-                        app('cache')->put('dg_sf_lasttime',$v['created_at'],60*12);
+                        app('cache')->put('dg_ban_lasttime',$v['created_at'],60*12);
                     }
                 }
-                app('cache')->put('dg_sf_lastdata',$data,60*12);
+
+                $ARR = [];
+                foreach ($dateArr as $k=>$v){
+                    $ARR[] = $data[$v];
+                }
+                $data = $ARR;
+
+                app('cache')->put('dg_ban_lastdata',$data,60*12);
             }
         }
 
