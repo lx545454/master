@@ -26,12 +26,12 @@ class JingcaiController extends Controller
         $data = [];
         $lastone = DB::table('jczq')->orderBy('created_at','desc')->first();
         //判断缓存是否有效
-        if (app('cache')->has('jczq_lasttime')) {
-            $lasttime = app('cache')->get('jczq_lasttime');
-            if($lastone->created_at==$lasttime){
-                $data = app('cache')->get('jczq_lastdata');
-            }
-        }
+//        if (app('cache')->has('jczq_lasttime')) {
+//            $lasttime = app('cache')->get('jczq_lasttime');
+//            if($lastone->created_at==$lasttime){
+//                $data = app('cache')->get('jczq_lastdata');
+//            }
+//        }
 
         if(!$data){
             $zq = DB::table('jczq')->where('created_at',$lastone->created_at)->get();
@@ -68,6 +68,7 @@ class JingcaiController extends Controller
                         }
                         $v['gh'] = substr($v['gh'],0,-1);
 
+                        $v['pj'] = $v['pj3'].','.$v['pj1'].','.$v['pj0'];
                         $v['spf'] = $v['bet3'].','.$v['bet1'].','.$v['bet0'];
                         $v['rspf'] = $v['rang3'].','.$v['rang1'].','.$v['rang0'];
 
@@ -150,12 +151,12 @@ class JingcaiController extends Controller
         $data = [];
         $lastone = DB::table('dg_sf')->orderBy('created_at','desc')->first();
         //判断缓存是否有效
-        if (app('cache')->has('dg_sf_lasttime')) {
-                $lasttime = app('cache')->get('dg_sf_lasttime');
-            if($lastone->created_at==$lasttime){
-                $data = app('cache')->get('dg_sf_lastdata');
-            }
-        }
+//        if (app('cache')->has('dg_sf_lasttime')) {
+//                $lasttime = app('cache')->get('dg_sf_lasttime');
+//            if($lastone->created_at==$lasttime){
+//                $data = app('cache')->get('dg_sf_lastdata');
+//            }
+//        }
 
         if(!$data){
             $zq = DB::table('dg_sf')->where('created_at',$lastone->created_at)->get();
@@ -173,6 +174,10 @@ class JingcaiController extends Controller
                         $v['gh'].=$v['v'.$i].',';
                     }
                     $v['gh'] = substr($v['gh'],0,-1);
+
+                    $v['rspf'] = $v['bet3'].','.$v['bet1'].','.$v['bet0'];
+                    $v['name'] = $v['iid'];
+                    $v['et'] = $v['mt'];
 
                     if(!in_array($v['matchcode'],$dateArr)){
                         $dateArr[] = $v['matchcode'];
@@ -209,12 +214,12 @@ class JingcaiController extends Controller
         $data = [];
         $lastone = DB::table('dg_bf')->orderBy('created_at','desc')->first();
         //判断缓存是否有效
-        if (app('cache')->has('dg_bf_lasttime')) {
-            $lasttime = app('cache')->get('dg_bf_lasttime');
-            if($lastone->created_at==$lasttime){
-                $data = app('cache')->get('dg_bf_lastdata');
-            }
-        }
+//        if (app('cache')->has('dg_bf_lasttime')) {
+//            $lasttime = app('cache')->get('dg_bf_lasttime');
+//            if($lastone->created_at==$lasttime){
+//                $data = app('cache')->get('dg_bf_lastdata');
+//            }
+//        }
 
         if(!$data){
             $zq = DB::table('dg_bf')->where('created_at',$lastone->created_at)->get();
@@ -232,7 +237,9 @@ class JingcaiController extends Controller
                         $v['gh'].=$v['v'.$i].',';
                     }
                     $v['gh'] = substr($v['gh'],0,-1);
-
+                    $v['rspf'] = $v['bet3'].','.$v['bet1'].','.$v['bet0'];
+                    $v['name'] = $v['iid'];
+                    $v['et'] = $v['mt'];
                     $v['cbf'] = "";
                     for ($i=0;$i<=24;$i++){
                         $v['cbf'].=$v['bf'.($i+10)].',';
@@ -298,7 +305,9 @@ class JingcaiController extends Controller
                         $v['gh'].=$v['v'.$i].',';
                     }
                     $v['gh'] = substr($v['gh'],0,-1);
-
+                    $v['rspf'] = $v['bet3'].','.$v['bet1'].','.$v['bet0'];
+                    $v['name'] = $v['iid'];
+                    $v['et'] = $v['mt'];
                     $v['sxds'] = $v['s1'].','.$v['s2'].','.$v['x1'].','.$v['x2'];
                     if(!in_array($v['matchcode'],$dateArr)){
                         $dateArr[] = $v['matchcode'];
@@ -335,12 +344,12 @@ class JingcaiController extends Controller
         $data = [];
         $lastone = DB::table('dg_zong')->orderBy('created_at','desc')->first();
         //判断缓存是否有效
-        if (app('cache')->has('dg_zong_lasttime')) {
-            $lasttime = app('cache')->get('dg_zong_lasttime');
-            if($lastone->created_at==$lasttime){
-                $data = app('cache')->get('dg_zong_lastdata');
-            }
-        }
+//        if (app('cache')->has('dg_zong_lasttime')) {
+//            $lasttime = app('cache')->get('dg_zong_lasttime');
+//            if($lastone->created_at==$lasttime){
+//                $data = app('cache')->get('dg_zong_lastdata');
+//            }
+//        }
 
         if(!$data){
             $zq = DB::table('dg_zong')->where('created_at',$lastone->created_at)->get();
@@ -358,6 +367,9 @@ class JingcaiController extends Controller
                         $v['gh'].=$v['v'.$i].',';
                     }
                     $v['gh'] = substr($v['gh'],0,-1);
+                    $v['rspf'] = $v['bet3'].','.$v['bet1'].','.$v['bet0'];
+                    $v['name'] = $v['iid'];
+                    $v['et'] = $v['mt'];
                     $v['jqs'] = "";
                     for ($i=1;$i<=8;$i++){
                         $v['jqs'].=$v['bf'.$i].',';
@@ -399,12 +411,12 @@ class JingcaiController extends Controller
         $data = [];
         $lastone = DB::table('dg_ban')->orderBy('created_at','desc')->first();
         //判断缓存是否有效
-        if (app('cache')->has('dg_ban_lasttime')) {
-            $lasttime = app('cache')->get('dg_ban_lasttime');
-            if($lastone->created_at==$lasttime){
-                $data = app('cache')->get('dg_ban_lastdata');
-            }
-        }
+//        if (app('cache')->has('dg_ban_lasttime')) {
+//            $lasttime = app('cache')->get('dg_ban_lasttime');
+//            if($lastone->created_at==$lasttime){
+//                $data = app('cache')->get('dg_ban_lastdata');
+//            }
+//        }
 
         if(!$data){
             $zq = DB::table('dg_ban')->where('created_at',$lastone->created_at)->get();
@@ -422,7 +434,9 @@ class JingcaiController extends Controller
                         $v['gh'].=$v['v'.$i].',';
                     }
                     $v['gh'] = substr($v['gh'],0,-1);
-
+                    $v['rspf'] = $v['bet3'].','.$v['bet1'].','.$v['bet0'];
+                    $v['name'] = $v['iid'];
+                    $v['et'] = $v['mt'];
                     $v['bqc'] = "";
                     for ($i=1;$i<=9;$i++){
                         $v['bqc'].=$v['bf'.$i].',';
