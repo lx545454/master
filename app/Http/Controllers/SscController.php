@@ -886,12 +886,11 @@ class SscController extends Controller
 
     public function get_qici($request = []){
         $ssc = DB::table('game_ssc')->where('state',1)->first();
-        if($ssc){
-            return H::renderJson($ssc);
-        }else{
+        if(!$ssc){
             $this->add_qici();
             $ssc = DB::table('game_ssc')->where('state',1)->first();
         }
+        $ssc->endTime = date("Y-m-d G:H:s",strtotime($ssc->createTime)+$ssc->duration);
         return H::renderJson($ssc);
     }
 
@@ -937,6 +936,40 @@ class SscController extends Controller
                 return false;
 
         }
+    }
+
+    public function auto_add_ticket($request=[]){
+        $peilv = "58";
+        $ssc = DB::table('game_ssc')->orderBy('id','desc')->first();
+
+        if($ssc && isset($ssc->qici)){
+            $qici = $ssc->qici +1;
+            $res = DB::table("game_ssc")->insert([
+                'qici'=>$qici,
+                'peilv'=>$peilv,
+                'state'=>'1',
+            ]);
+            if($res){
+                $createRes = DB::select("call insert_test_val('{$qici}');");
+                if($createRes){
+                    return H::renderJson([], 0, "期次（{$qici}）创建成功");
+                }
+            }
+        }
+        return H::showErrorMess("初始化失败");
+
+    }
+
+    public function get_qicis($request=[]){
+        $ssc = DB::table('game_ssc')->get()->toArray();
+        if($ssc){
+            return H::renderJson($ssc);
+        }else{
+            $this->add_qici();
+            $ssc = DB::table('game_ssc')->get()->toArray();
+        }
+        return H::renderJson($ssc);
+
     }
 
 }
