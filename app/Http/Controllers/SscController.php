@@ -15,11 +15,17 @@ class SscController extends Controller
 {
 
 
+    public function goupdate($request=[]){
+        $data = $request['bet_data'];
+        foreach ($data as $k=>$v){
+            self::update($v);
+        }
+    }
     public function update($request=[])
     {
         $playType = $request['playType'] ?? "";
         $number = $request['number'] ?? "";
-        $beishu = $request['beishu'] ?? "";
+        $beishu = $request['beishu'] ?? "1";
         $qici = $request['qici'] ?? "";
         $money = $request['money'] ?? "";
         $uid = $request['uid'] ?? "";
@@ -422,8 +428,8 @@ class SscController extends Controller
             case "24":
                 $location  = ['0'=>'shi','1'=>'ge'];
                 $data = explode('-',$number);
-                if(count($data)<3 || count($data)>7){
-                   return H::showErrorMess("投注格式错误：二星组选复试只能传入3-7个数字");
+                if(count($data)<2){
+                   return H::showErrorMess("投注格式错误：二星组选复试至少2个数字");
                 }
                 foreach ($data as $k=>$v){
                     foreach ($data as $k1=>$v1){
