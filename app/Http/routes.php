@@ -96,6 +96,7 @@ $app->group(['prefix' => 'api/v1'], function($app)
     $app->post('ssc_goupdate','FactoryController@link');
     $app->post('ssc_get_qici','FactoryController@link');
     $app->post('ssc_get_qicis','FactoryController@link');
+    $app->post('ssc_get_qici_detail','FactoryController@link');
 
     $app->post('jc_duizhen','JingcaiController@duizhen');
     $app->post('jc_all','JingcaiController@duizhen');

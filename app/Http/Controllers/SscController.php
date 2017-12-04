@@ -17,9 +17,12 @@ class SscController extends Controller
 
     public function goupdate($request=[]){
         $data = $request['bet_data'];
+        Log::info('outLog',['data1'=>$data]);
         foreach ($data as $k=>$v){
+            Log::info('outLog',['data2'=>$v]);
             self::update($v);
         }
+        return H::renderJson([], 0, '投注成功');
     }
     public function update($request=[])
     {
@@ -869,7 +872,7 @@ class SscController extends Controller
         }
         DB::table('game_ssc')->where('qici',$qici)->increment('money',$money);
 
-        return H::renderJson([], 0, '投注成功');
+//        return H::renderJson([], 0, '投注成功');
     }
     public function getNum($request = []){
         $qici = $request['qici'] ?? "";
@@ -967,6 +970,20 @@ class SscController extends Controller
     }
 
     public function get_qicis($request=[]){
+        $ssc = DB::table('game_ssc')->get()->toArray();
+        if($ssc){
+            return H::renderJson($ssc);
+        }else{
+            $this->add_qici();
+            $ssc = DB::table('game_ssc')->get()->toArray();
+        }
+        return H::renderJson($ssc);
+
+    }
+
+    public function get_qici_detail($request=[]){
+        $qici = $request['qici'] ?? "";
+        $tableName = 'dicofnum_'.$qici;
         $ssc = DB::table('game_ssc')->get()->toArray();
         if($ssc){
             return H::renderJson($ssc);
