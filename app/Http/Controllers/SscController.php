@@ -10,6 +10,7 @@ use App\Xiaoxi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Lib\ssc;
+use Log;
 
 class SscController extends Controller
 {
