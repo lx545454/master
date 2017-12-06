@@ -108,4 +108,6 @@ $app->group(['prefix' => 'api/v1'], function($app)
     $app->get('jc_dc','JingcaiController@dc');
     $app->post('jc_dc','JingcaiController@dc');
 
+    $app->post('get_cqssc','AppController@get_cqssc');
+
 });

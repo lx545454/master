@@ -26,4 +26,16 @@ class AppController extends Controller
         return UtilityHelper::renderJson($data, 0, '');
     }
 
+    public function get_cqssc(Request $request)
+    {
+        $sub_data['caipiaoid'] = "73";
+        $sub_data['appkey'] = env('JS_APPKEY');
+        $res = REQ::requset_all('caipiao_history','form',$sub_data);
+        if(isset($res['status']) && $res['status'] == "0"){
+            return UtilityHelper::renderJson($res, 0, '');
+        }
+
+
+    }
+
 }

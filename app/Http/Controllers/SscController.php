@@ -984,16 +984,50 @@ class SscController extends Controller
 
     public function get_qici_detail($request=[]){
         $qici = $request['qici'] ?? "";
-        $tableName = 'dicofnum_'.$qici;
-        $ssc = DB::table('game_ssc')->get()->toArray();
-        if($ssc){
+        if($qici){
+            $ssc = DB::table("ssc_order")->where('qici','=',$qici)->get()->toArray();
             return H::renderJson($ssc);
         }else{
-            $this->add_qici();
-            $ssc = DB::table('game_ssc')->get()->toArray();
+            return H::showErrorMess("需要期次");
         }
-        return H::renderJson($ssc);
+    }
 
+    public function fanjiang($request=[]){
+        $qici = $request['qici'] ?? "";
+        if($qici){
+            $ssc = DB::table("ssc_order")->where('qici','=',$qici)->get()->toArray();
+//            foreach (){
+//
+//            }
+            return H::renderJson($ssc);
+        }else{
+            return H::showErrorMess("需要期次");
+        }
+    }
+
+    //返奖规则
+    public function fjgz($Arr){
+        $playType = $Arr['playType'] ?? "0";
+        switch ($playType){
+            case 11:
+                return "wan";
+                break;
+            case 1:
+                return "qian";
+                break;
+            case 2:
+                return "bai";
+                break;
+            case 3:
+                return "shi";
+                break;
+            case 4:
+                return "ge";
+                break;
+            default:
+                return false;
+
+        }
     }
 
 }
