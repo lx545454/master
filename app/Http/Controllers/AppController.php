@@ -43,12 +43,14 @@ class AppController extends Controller
         $sub_data['caipiaoid'] = "73";
         $sub_data['appkey'] = env('JS_APPKEY');
         $sub_data['num'] = "20";
-        $sub_data['start'] = 0;
+        $sub_data['start'] = 32420;
         $all = array();
         $alls = array();
         while (true){
             $res = REQ::requset_all('caipiao_history','form',$sub_data);
-            if(isset($res['status']) && $res['status'] == "0" && isset($res['result']['list'])){
+            echo $sub_data['start'];
+            if(isset($res['status']) && isset($res['result']['list'])){
+
                 foreach ($res['result']['list'] as $k=>$v){
                     $v['number'] = str_replace(' ','',$v['number']);
                     $res = DB::table("cqssc3")->insert([
@@ -80,14 +82,16 @@ class AppController extends Controller
 
     }
 
+
     public function get_cqssc3(Request $request)
     {
         $sub_data['caipiaoid'] = "73";
         $sub_data['appkey'] = env('JS_APPKEY');
         $sub_data['num'] = "20";
-        $sub_data['start'] = 0;
+        $sub_data['start'] = 21460;
         $all = array();
         $res = REQ::requset_all('caipiao_history','form',$sub_data);
+        print_r($res);
         if(isset($res['status']) && $res['status'] == "0" && isset($res['result']['list'])){
             foreach ($res['result']['list'] as $k=>$v){
                 $v['number'] = str_replace(' ','',$v['number']);
@@ -125,15 +129,32 @@ class AppController extends Controller
 
     public function get_cqssc_num(Request $request)
     {
-        $res = DB::table('cqssc2')->groupBy("num")->having('cf','<','3')->get();
-        $numArr = array();
+        $pageSize = $request->input('pageSize', 10);
+        $page = $request->input('page', 1);
+        $skip = (abs((int)$page)-1)*$pageSize;
+        $cf = $request->input('cf',10);
+
+        $res = DB::table('cqssc3')->skip($skip)->take($pageSize)->groupBy("num")->having('cf','<',$cf)->get();
         $nums = "";
         foreach ($res as $k=>$v){
-            $numArr[] = $v->num;
-            $nums.="".$v->num;
+            $nums.=" ".$v->num;
         }
-        echo $nums;
-//        return UtilityHelper::renderJson($numArr, 0, '');
+        $data['numArr'] = $res;
+        $data['nums'] =trim($nums);
+        return UtilityHelper::renderJson($data, 0, '');
+    }
+
+    public function set_cf(Request $request)
+    {
+        $res = DB::table('cqssc3')->groupBy("num")->get();
+        $numArr = array();
+        foreach ($res as $k=>$v){
+            $count = DB::table('cqssc3')->where("num",'=',$v->num)->count();
+            DB::table('cqssc3')->where("num",'=',$v->num)->update([
+                'cf' => $count
+            ]);
+        }
+        return UtilityHelper::renderJson($numArr, 0, 'cf设置成功');
     }
 
 }
