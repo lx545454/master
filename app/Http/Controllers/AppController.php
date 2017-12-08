@@ -70,7 +70,6 @@ class AppController extends Controller
 
         }
 
-
         foreach ($all as $k=>$v){
             $count = DB::table('cqssc3')->where("num",'=',$v['number'])->count();
             DB::table('cqssc3')->where("num",'=',$v['number'])->update([
@@ -123,4 +122,18 @@ class AppController extends Controller
         }
         return UtilityHelper::renderJson($numArr, 0, '');
     }
+
+    public function get_cqssc_num(Request $request)
+    {
+        $res = DB::table('cqssc2')->groupBy("num")->having('cf','<','3')->get();
+        $numArr = array();
+        $nums = "";
+        foreach ($res as $k=>$v){
+            $numArr[] = $v->num;
+            $nums.="".$v->num;
+        }
+        echo $nums;
+//        return UtilityHelper::renderJson($numArr, 0, '');
+    }
+
 }
