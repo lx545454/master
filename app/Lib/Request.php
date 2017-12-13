@@ -67,16 +67,19 @@ class Request
         'caipiao_history' => array("API_JS",'caipiao/history','post'),
 
         //竞猜
-        'jingcai' => array("API_JC",'test/test.go',"post")
+        'jingcai' => array("API_JC",'test/test.go',"post"),
+
+        'alicp_query' => array("API_ALI",'caipiao/query','GET'),
+        'alicp_history' => array("API_ALI",'caipiao/history','GET'),
 
     );
 
     public static function requset_all($key,$type,$params,$sign_key="SIGN_KEY"){
-        $params['timestamp'] = date('Ymdhis');
-        if(isset($params['merchant_id'])&&$params['merchant_id']=='22015'){
-            $sign_key = "QIANYUN";
-        }
-        $params['sign'] = UtilityHelper::createSign_lm($params,$sign_key);
+//        $params['timestamp'] = date('Ymdhis');
+//        if(isset($params['merchant_id'])&&$params['merchant_id']=='22015'){
+//            $sign_key = "QIANYUN";
+//        }
+//        $params['sign'] = UtilityHelper::createSign_lm($params,$sign_key);
 
         if(isset(self::$arr[$key])){
             $api = self::$arr[$key];
@@ -91,6 +94,8 @@ class Request
                     return self::request_form($method,$url_,$uri,$params);break;
                 case 'query':
                     return self::request_query($method,$url_,$uri,$params);break;
+                case 'auth':
+                    return self::request_auth($method,$url_,$uri,$params);break;
                 default:
                     return self::request_json($method,$url_,$uri,$params);break;
             }
@@ -122,6 +127,30 @@ class Request
 //            'query' => $params,
         ];
         return self::request($method,$url, $params,$options);
+    }
+
+    public static function request_auth($method,$url_, $uri, $params = []){
+        $url = env($url_).$uri;
+        $appcode = env('APPCODE');
+        $headers = array();
+        array_push($headers, "Authorization:APPCODE " . $appcode);
+        $querys = http_build_query($params);
+        $bodys = "";
+        $url = $url . "?" . $querys;
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($curl, CURLOPT_FAILONERROR, false);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_HEADER, true);
+        if (1 == strpos("$".$url, "https://"))
+        {
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        }
+        return curl_exec($curl);
+
     }
 
     public static function request_xml($body,$cmd){
@@ -166,6 +195,7 @@ class Request
         try {
             $res = $client->request(strtoupper($method), $url, $options);
         } catch (\Exception $e) {
+//            print_r($e->getMessage());die;
             return UtilityHelper::showError(40000);
         }
         if ($res->getStatusCode() == 200) {
@@ -179,6 +209,7 @@ class Request
 //        Log::warn('BD request error '.$url.' status code '.$res->getStatusCode().' body '.$res->getBody());
         return null;
     }
+
 
 
 

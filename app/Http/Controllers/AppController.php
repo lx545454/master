@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\App_version;
+use App\Lib\Logs;
 use App\Lunbotu;
 use App\Lib\Code;
 use App\Lib\UtilityHelper;
@@ -9,6 +10,7 @@ use App\Lib\Request as REQ;
 use App\Xiaoxi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Log;
 
 class AppController extends Controller
 {
@@ -91,7 +93,6 @@ class AppController extends Controller
         $sub_data['start'] = 21460;
         $all = array();
         $res = REQ::requset_all('caipiao_history','form',$sub_data);
-        print_r($res);
         if(isset($res['status']) && $res['status'] == "0" && isset($res['result']['list'])){
             foreach ($res['result']['list'] as $k=>$v){
                 $v['number'] = str_replace(' ','',$v['number']);
@@ -131,10 +132,11 @@ class AppController extends Controller
     {
         $pageSize = $request->input('pageSize', 10);
         $page = $request->input('page', 1);
-        $skip = (abs((int)$page)-1)*$pageSize;
+        $skip = $request->input('skip', 1);
+//        $skip = (abs((int)$page)-1)*$pageSize;
         $cf = $request->input('cf',10);
 
-        $res = DB::table('cqssc3')->skip($skip)->take($pageSize)->groupBy("num")->having('cf','<',$cf)->get();
+        $res = DB::table('cqssc3')->skip($skip)->take($pageSize)->groupBy("num")->orderBy('id')->having('cf','<',$cf)->get();
         $nums = "";
         foreach ($res as $k=>$v){
             $nums.=" ".$v->num;
@@ -155,6 +157,30 @@ class AppController extends Controller
             ]);
         }
         return UtilityHelper::renderJson($numArr, 0, 'cf设置成功');
+    }
+
+    public function add_cqssc(Request $request)
+    {
+        $res = REQ::requset_all("alicp_query",'auth',['caipiaoid'=>'73']);
+        $xiabiao = strpos($res,'{');
+        $res = \GuzzleHttp\json_decode(substr($res,$xiabiao),true);
+        $data = $res['result'] ?? false;
+        if(!$data) return UtilityHelper::renderJson([], 0, "阿里云接口失效");
+        $data['number'] = str_replace(' ','',$data['number']);
+
+        try{
+            $res = DB::table("cqssc3")->insert([
+                'qici'=>$data['issueno'],
+                'num'=>$data['number'],
+                'opendate'=>$data['opendate'],
+            ]);
+        }catch (\Exception $e){
+            Logs::debug('cqssc','add_cqssc=======>'.$e->getMessage());
+            return UtilityHelper::renderJson([], 0, $e->getMessage());
+
+        }
+
+        return UtilityHelper::renderJson([], 0, '成功');
     }
 
 }

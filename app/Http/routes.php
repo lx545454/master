@@ -116,4 +116,6 @@ $app->group(['prefix' => 'api/v1'], function($app)
     $app->post('set_cf','AppController@set_cf');
     $app->post('get_cqssc_num','AppController@get_cqssc_num');
 
+    $app->get('add_cqssc','AppController@add_cqssc');
+
 });
