@@ -188,7 +188,7 @@ class AppController extends Controller
 
         $arr1 = array();
         foreach ($res_1 as $k=>$v){
-            for ($i=0;$i<5;$i++){
+            for ($i=0;$i<4;$i++){
                 $str = substr($v->num,$i,2);
                 if(!in_array($str,$arr1)){
                     $arr1[] = $str;
@@ -198,7 +198,7 @@ class AppController extends Controller
 
         $arr2 = array();
         foreach ($res_2 as $k=>$v){
-            for ($i=0;$i<5;$i++){
+            for ($i=0;$i<4;$i++){
                 $str = substr($v->num,$i,2);
                 if(!in_array($str,$arr2)){
                     $arr2[] = $str;
