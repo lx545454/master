@@ -11,6 +11,7 @@ use App\Xiaoxi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Log;
+use Mockery\CountValidator\Exception;
 
 class AppController extends Controller
 {
@@ -90,17 +91,22 @@ class AppController extends Controller
         $sub_data['caipiaoid'] = "73";
         $sub_data['appkey'] = env('JS_APPKEY');
         $sub_data['num'] = "20";
-        $sub_data['start'] = 21460;
+        $sub_data['start'] = $request['start'] ?? 0;
         $all = array();
         $res = REQ::requset_all('caipiao_history','form',$sub_data);
         if(isset($res['status']) && $res['status'] == "0" && isset($res['result']['list'])){
             foreach ($res['result']['list'] as $k=>$v){
                 $v['number'] = str_replace(' ','',$v['number']);
-                $res = DB::table("cqssc3")->insert([
-                    'qici'=>$v['issueno'],
-                    'num'=>$v['number'],
-                    'opendate'=>$v['opendate'],
-                ]);
+                try{
+                    $res = DB::table("cqssc3")->insert([
+                        'qici'=>$v['issueno'],
+                        'num'=>$v['number'],
+                        'opendate'=>$v['opendate'],
+                    ]);
+                }catch (Exception $e){
+                    Logs::debug('cqssc','add_cqssc_list=======>'.$e->getMessage());
+                }
+
 
                 if(!in_array($v,$all)){
                     $all[] = $v;
@@ -108,12 +114,12 @@ class AppController extends Controller
             }
         }
 
-        foreach ($all as $k=>$v){
-            $count = DB::table('cqssc3')->where("num",'=',$v['number'])->count();
-            DB::table('cqssc3')->where("num",'=',$v['number'])->update([
-                'cf' => $count
-            ]);
-        }
+//        foreach ($all as $k=>$v){
+//            $count = DB::table('cqssc3')->where("num",'=',$v['number'])->count();
+//            DB::table('cqssc3')->where("num",'=',$v['number'])->update([
+//                'cf' => $count
+//            ]);
+//        }
         return UtilityHelper::renderJson($res, 0, '一共有：'.count($all));
 
     }
