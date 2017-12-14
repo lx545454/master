@@ -45,8 +45,8 @@ class AppController extends Controller
     {
         $sub_data['caipiaoid'] = "73";
         $sub_data['appkey'] = env('JS_APPKEY');
-        $sub_data['num'] = "20";
-        $sub_data['start'] = 32420;
+        $sub_data['num'] = $request['num'] ?? 1;
+        $sub_data['start'] = $request['start'] ?? 0;
         $all = array();
         $alls = array();
         while (true){
@@ -68,19 +68,19 @@ class AppController extends Controller
 
                     $alls[] = $v;
                 }
-                $sub_data['start'] +=20;
+                $sub_data['start'] +=$request['num'];
             }else{
                 break;
             }
 
         }
 
-        foreach ($all as $k=>$v){
-            $count = DB::table('cqssc3')->where("num",'=',$v['number'])->count();
-            DB::table('cqssc3')->where("num",'=',$v['number'])->update([
-                'cf' => $count
-            ]);
-        }
+//        foreach ($all as $k=>$v){
+//            $count = DB::table('cqssc3')->where("num",'=',$v['number'])->count();
+//            DB::table('cqssc3')->where("num",'=',$v['number'])->update([
+//                'cf' => $count
+//            ]);
+//        }
         return UtilityHelper::renderJson($res, 0, '一共有：'.count($all));
 
     }
@@ -101,7 +101,7 @@ class AppController extends Controller
                     $res = DB::table("cqssc3")->insert([
                         'qici'=>$v['issueno'],
                         'num'=>$v['number'],
-                        'opendate'=>'\''.$v['opendate'].'\'',
+                        'opendate'=>$v['opendate'],
                     ]);
                 }catch (Exception $e){
                     Logs::debug('cqssc','add_cqssc_list=======>'.$e->getMessage());
