@@ -101,7 +101,7 @@ class AppController extends Controller
                     $res = DB::table("cqssc3")->insert([
                         'qici'=>$v['issueno'],
                         'num'=>$v['number'],
-                        'opendate'=>$v['opendate'],
+                        'opendate'=>'\''.$v['opendate'].'\'',
                     ]);
                 }catch (Exception $e){
                     Logs::debug('cqssc','add_cqssc_list=======>'.$e->getMessage());
