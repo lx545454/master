@@ -126,12 +126,91 @@ class AppController extends Controller
 
     public function get_cqssc_history(Request $request)
     {
-        $res = DB::table('cqssc2')->groupBy("num")->get();
+        $res = DB::table('cqssc3')->groupBy("num")->get();
         $numArr = array();
         foreach ($res as $k=>$v){
             $numArr[] = $v->num;
         }
         return UtilityHelper::renderJson($numArr, 0, '');
+    }
+
+    public function get_ssc_history(Request $request)
+    {
+        $qici = $request['qici'] ?? "0";
+        $num = $request['num'] ?? 1;
+        $xxxx = $request['xxxx'] ?? ">";
+
+        $res = DB::table('cqssc3')->where('qici',$xxxx,$qici)->orderBy('qici','desc')->limit($num)->get();
+        $data = array();
+        $data['data'] = $res;
+
+        $numArr = array();
+        foreach ($res as $k=>$v){
+            $numArr[] = $v->num;
+        }
+        $data['numArr'] = $numArr;
+
+        return UtilityHelper::renderJson($data, 0, '');
+    }
+
+    public function get_history_2x(Request $request)
+    {
+        $count = $request['count'] ?? 30;
+        $num = $request['num'] ?? false;
+        $qici = $request['qici'] ?? false;
+
+        if($qici){
+            $data = DB::table('cqssc3')->where('qici','=',$qici)->first();
+            if(!$data) return UtilityHelper::renderJson([], 0, "该期次不存在");
+            $num = $data->num;
+        }else{
+            $res = REQ::requset_all("alicp_query",'auth',['caipiaoid'=>'73']);
+            $xiabiao = strpos($res,'{');
+            $res = \GuzzleHttp\json_decode(substr($res,$xiabiao),true);
+            $data = $res['result'] ?? false;
+            if(!$data) return UtilityHelper::renderJson([], 0, "阿里云接口失效");
+            $num = str_replace(' ','',$data['number']);
+            $qici = $data['issueno'];
+        }
+
+
+        $str1 = substr($num,0,3);
+        $str2 = substr($num,2,3);
+
+        $res1 = DB::table('cqssc3')->where('num','like',$str1."%")->where('qici','<',$qici)->orderBy('qici','desc')->first();
+        $res2 = DB::table('cqssc3')->where('num','like',"%".$str2)->where('qici','<',$qici)->orderBy('qici','desc')->first();
+
+        $qici1 = $res1->qici;
+        $qici2 = $res2->qici;
+
+        $res_1 = DB::table('cqssc3')->where('qici','<',$qici1)->orderBy('qici','desc')->limit($count)->get()->toArray();
+        $res_2 = DB::table('cqssc3')->where('qici','<',$qici2)->orderBy('qici','desc')->limit($count)->get()->toArray();
+
+        $arr1 = array();
+        foreach ($res_1 as $k=>$v){
+            for ($i=0;$i<5;$i++){
+                $str = substr($v->num,$i,2);
+                if(!in_array($str,$arr1)){
+                    $arr1[] = $str;
+                }
+            }
+        }
+
+        $arr2 = array();
+        foreach ($res_2 as $k=>$v){
+            for ($i=0;$i<5;$i++){
+                $str = substr($v->num,$i,2);
+                if(!in_array($str,$arr2)){
+                    $arr2[] = $str;
+                }
+            }
+        }
+        $output = array();
+        $output['arr1'] = $arr1;
+        $output['arr2'] = $arr2;
+        $output['qici'] = $qici;
+        $output['num'] = $num;
+        return UtilityHelper::renderJson($output, 0, '');
     }
 
     public function get_cqssc_num(Request $request)
@@ -187,6 +266,16 @@ class AppController extends Controller
         }
 
         return UtilityHelper::renderJson([], 0, '成功');
+    }
+
+    public function get_one(){
+
+        $res = REQ::requset_all("alicp_query",'auth',['caipiaoid'=>'73']);
+        $xiabiao = strpos($res,'{');
+        $res = \GuzzleHttp\json_decode(substr($res,$xiabiao),true);
+        $data = $res['result'] ?? false;
+        if(!$data) return UtilityHelper::renderJson([], 0, "阿里云接口失效");
+        return UtilityHelper::renderJson($data, 0, '成功');
     }
 
 }
