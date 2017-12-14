@@ -156,7 +156,6 @@ class AppController extends Controller
     public function get_history_2x(Request $request)
     {
         $count = $request['count'] ?? 30;
-        $num = $request['num'] ?? false;
         $qici = $request['qici'] ?? false;
 
         if($qici){
@@ -183,8 +182,8 @@ class AppController extends Controller
         $qici1 = $res1->qici;
         $qici2 = $res2->qici;
 
-        $res_1 = DB::table('cqssc3')->where('qici','<',$qici1)->orderBy('qici','desc')->limit($count)->get()->toArray();
-        $res_2 = DB::table('cqssc3')->where('qici','<',$qici2)->orderBy('qici','desc')->limit($count)->get()->toArray();
+        $res_1 = DB::table('cqssc3')->where('qici','>',$qici1)->orderBy('qici')->limit($count)->get()->toArray();
+        $res_2 = DB::table('cqssc3')->where('qici','>',$qici2)->orderBy('qici')->limit($count)->get()->toArray();
 
         $arr1 = array();
         foreach ($res_1 as $k=>$v){
@@ -205,6 +204,7 @@ class AppController extends Controller
                 }
             }
         }
+//        print_r($res1);print_r($res_1);die;
         $output = array();
         $output['arr1'] = $arr1;
         $output['arr2'] = $arr2;
