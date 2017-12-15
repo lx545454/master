@@ -159,11 +159,16 @@ class AppController extends Controller
         $request['startDate'] = $request['startDate'] ??  date("Y-m-d");
         $request['endDate'] = $request['endDate'] ?? date("Y-m-d",strtotime("+1 day"));
         $res = DB::table('cqssc3')->where('opendate','>',$request['startDate'])->where('opendate','<',$request['endDate'])->orderBy('qici')->get()->toArray();
+        $data['dui'] = 0;
         if($res){
             foreach ($res as $k=>$v){
                 $request['qici'] = $v->qici;
                 $one = self::get_history_2x_one($request);
                 $data[] = $one;
+                if($one['zai'] == 1){
+                    $data['dui']++;
+                }
+
             }
         }
         return UtilityHelper::renderJson($data, 0, '');
