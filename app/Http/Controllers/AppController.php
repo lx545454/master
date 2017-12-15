@@ -360,7 +360,7 @@ class AppController extends Controller
         $output['arr1'] = $arr1;
         $output['arr2'] = $arr2;
         $output['arr3'] = $arr3;
-        $output['arrAll'] = $arr1+$arr2+$arr3;
+        $output['arrAll'] = array_intersect($arr1,$arr2,$arr3);
         sort($output['arr1']);
         sort($output['arr2']);
         sort($output['arr3']);
