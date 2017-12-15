@@ -245,9 +245,9 @@ class AppController extends Controller
         //下一期
         $res3 = DB::table('cqssc3')->where('qici','>',$qici)->orderBy('qici')->first();
         if($res3){
-            $qici3 = $res3->qici;
-            $str3_1 = substr($num,0,2);
-            $str3_2 = substr($num,3,2);
+//            $qici3 = $res3->qici;
+            $str3_1 = substr($res3->num,0,2);
+            $str3_2 = substr($res3->num,3,2);
             if(in_array($str3_1,$arr1) && in_array($str3_2,$arr2)){
                 $output['zai'] = 1;
             }else{
@@ -259,6 +259,134 @@ class AppController extends Controller
 
         return $output;
     }
+
+    public function get_history_3x(Request $request){
+        $data = self::get_history_3x_one($request);
+        return UtilityHelper::renderJson($data, 0, '');
+    }
+
+    public function get_history_3x_one(Request $request)
+    {
+        $count = $request['count'] ?? 15;
+        $qici = $request['qici'] ?? false;
+
+        if($qici){
+            $data = DB::table('cqssc3')->where('qici','=',$qici)->first();
+            if(!$data) return UtilityHelper::renderJson([], 0, "该期次不存在");
+            $num = $data->num;
+        }else{
+            $res = REQ::requset_all("alicp_query",'auth',['caipiaoid'=>'73']);
+            $xiabiao = strpos($res,'{');
+            $res = \GuzzleHttp\json_decode(substr($res,$xiabiao),true);
+            $data = $res['result'] ?? false;
+            if(!$data) return UtilityHelper::renderJson([], 0, "阿里云接口失效");
+            $num = str_replace(' ','',$data['number']);
+            $qici = $data['issueno'];
+        }
+
+
+        $str1 = substr($num,0,3);
+        $str2 = substr($num,1,3);
+        $str3 = substr($num,2,3);
+
+        $res1 = DB::table('cqssc3')->where('num','like',$str1."%")->where('qici','<',$qici)->orderBy('qici','desc')->first();
+//        $res2 = DB::table('cqssc3')->where('num','like',"%".$str2.'%')->where('qici','<',$qici)->orderBy('qici','desc')->first();
+        $res2 = DB::select("select * from t_cqssc3 where SUBSTR(num,2,3)=".$str2." and qici<'".$qici."' order by qici desc limit 1");
+        $res3 = DB::table('cqssc3')->where('num','like',"%".$str3)->where('qici','<',$qici)->orderBy('qici','desc')->first();
+
+
+        $qici1 = $res1->qici;
+        $qici2 = $res2[0]->qici;
+        $qici3 = $res3->qici;
+
+        $res_1 = DB::table('cqssc3')->where('qici','>',$qici1)->orderBy('qici')->limit($count)->get()->toArray();
+        $res_2 = DB::table('cqssc3')->where('qici','>',$qici2)->orderBy('qici')->limit($count)->get()->toArray();
+        $res_3 = DB::table('cqssc3')->where('qici','>',$qici3)->orderBy('qici')->limit($count)->get()->toArray();
+
+        $arr1 = array();
+        foreach ($res_1 as $k=>$v){
+            for ($i=0;$i<5;$i++){
+                for ($j=0;$j<5;$j++){
+                    if($i==$j){
+                        continue;
+                    }else{
+                        $str = $v->num[$i].$v->num[$j];
+                        if(!in_array($str,$arr1)){
+                            $arr1[] = $str;
+                        }
+                    }
+
+                }
+            }
+        }
+
+        $arr2 = array();
+        foreach ($res_2 as $k=>$v){
+            for ($i=0;$i<5;$i++){
+                for ($j=0;$j<5;$j++){
+                    if($i==$j){
+                        continue;
+                    }else{
+                        $str = $v->num[$i].$v->num[$j];
+                        if(!in_array($str,$arr2)){
+                            $arr2[] = $str;
+                        }
+                    }
+
+                }
+            }
+        }
+
+        $arr3 = array();
+        foreach ($res_3 as $k=>$v){
+            for ($i=0;$i<5;$i++){
+                for ($j=0;$j<5;$j++){
+                    if($i==$j){
+                        continue;
+                    }else{
+                        $str = $v->num[$i].$v->num[$j];
+                        if(!in_array($str,$arr3)){
+                            $arr3[] = $str;
+                        }
+                    }
+
+                }
+            }
+        }
+
+//        print_r($res1);print_r($res_1);die;
+        $output = array();
+
+        $output['arr1'] = $arr1;
+        $output['arr2'] = $arr2;
+        $output['arr3'] = $arr3;
+        $output['arrAll'] = $arr1+$arr2+$arr3;
+        sort($output['arr1']);
+        sort($output['arr2']);
+        sort($output['arr3']);
+        sort($output['arrAll']);
+        $output['qici'] = $qici;
+        $output['num'] = $num;
+
+        //下一期
+        $res_n = DB::table('cqssc3')->where('qici','>',$qici)->orderBy('qici')->first();
+        if($res_n){
+            $str_n_1 = substr($res_n->num,0,2);
+            $str_n_2 = substr($res_n->num,1,2);
+            $str_n_3 = substr($res_n->num,2,2);
+            $str_n_4 = substr($res_n->num,3,2);
+            if(in_array($str_n_1,$output['arrAll']) && in_array($str_n_2,$output['arrAll']) &&in_array($str_n_3,$output['arrAll']) &&in_array($str_n_4,$output['arrAll']) ){
+                $output['zai'] = 1;
+            }else{
+                $output['zai'] = 2;
+            }
+        }else{
+            $output['zai'] = 0;
+        }
+
+        return $output;
+    }
+
 
     public function get_cqssc_num(Request $request)
     {
