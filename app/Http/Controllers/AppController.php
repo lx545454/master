@@ -153,7 +153,31 @@ class AppController extends Controller
         return UtilityHelper::renderJson($data, 0, '');
     }
 
-    public function get_history_2x(Request $request)
+    public function get_history_2x_list(Request $request){
+        $data = array();
+        $request['count'] = $request['count'] ??  30;
+        $request['startDate'] = $request['startDate'] ??  date("Y-m-d");
+        $request['endDate'] = $request['endDate'] ?? date("Y-m-d",strtotime("+1 day"));
+        $res = DB::table('cqssc3')->where('opendate','>',$request['startDate'])->where('opendate','<',$request['endDate'])->get()->toArray();
+        if($res){
+            foreach ($res as $k=>$v){
+                $request['qici'] = $v->qici;
+                $one = self::get_history_2x_one($request);
+                $data[] = $one;
+            }
+        }
+        return UtilityHelper::renderJson($data, 0, '');
+
+
+    }
+
+    public function get_history_2x(Request $request){
+        $data = self::get_history_2x_one($request);
+        return UtilityHelper::renderJson($data, 0, '');
+    }
+
+
+    public function get_history_2x_one(Request $request)
     {
         $count = $request['count'] ?? 30;
         $qici = $request['qici'] ?? false;
@@ -178,6 +202,8 @@ class AppController extends Controller
 
         $res1 = DB::table('cqssc3')->where('num','like',$str1."%")->where('qici','<',$qici)->orderBy('qici','desc')->first();
         $res2 = DB::table('cqssc3')->where('num','like',"%".$str2)->where('qici','<',$qici)->orderBy('qici','desc')->first();
+
+
 
         $qici1 = $res1->qici;
         $qici2 = $res2->qici;
@@ -210,7 +236,23 @@ class AppController extends Controller
         $output['arr2'] = $arr2;
         $output['qici'] = $qici;
         $output['num'] = $num;
-        return UtilityHelper::renderJson($output, 0, '');
+
+        //下一期
+        $res3 = DB::table('cqssc3')->where('qici','>',$qici)->orderBy('qici')->first();
+        if($res3){
+            $qici3 = $res3->qici;
+            $str3_1 = substr($num,0,2);
+            $str3_2 = substr($num,3,2);
+            if(in_array($str3_1,$arr1) && in_array($str3_2,$arr2)){
+                $output['zai'] = 1;
+            }else{
+                $output['zai'] = 2;
+            }
+        }else{
+            $output['zai'] = 0;
+        }
+
+        return $output;
     }
 
     public function get_cqssc_num(Request $request)
