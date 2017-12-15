@@ -315,14 +315,50 @@ class AppController extends Controller
         return UtilityHelper::renderJson([], 0, '成功');
     }
 
-    public function get_one(){
+    public function add_cqsscs(Request $request)
+    {
+        $qicis = $request['qicis'] ?? false;
+        if(!$qicis){
+            return UtilityHelper::renderJson([], 0, "必须传入期次");
+        }
+        $qiciArr = explode(',',$qicis);
+        foreach ($qiciArr as $k=>$v){
+            $data = self::get_one_res(['qici'=>$v]);
+            $data['number'] = str_replace(' ','',$data['number']);
 
-        $res = REQ::requset_all("alicp_query",'auth',['caipiaoid'=>'73']);
+            try{
+                $res = DB::table("cqssc3")->insert([
+                    'qici'=>$data['issueno'],
+                    'num'=>$data['number'],
+                    'opendate'=>$data['opendate'],
+                ]);
+            }catch (\Exception $e){
+                Logs::debug('cqssc','add_cqssc=======>'.$e->getMessage());
+                return UtilityHelper::renderJson([], 0, $e->getMessage());
+
+            }
+        }
+
+        return UtilityHelper::renderJson([], 0, '成功');
+    }
+
+    public function get_one(Request $request){
+        $data = self::get_one_res($request);
+        return UtilityHelper::renderJson($data, 0, '成功');
+    }
+
+    public function get_one_res($request = array()){
+        $qici = $request['qici'] ?? false;
+        if($qici){
+            $res = REQ::requset_all("alicp_query",'auth',['caipiaoid'=>'73','issueno'=>$qici]);
+        }else{
+            $res = REQ::requset_all("alicp_query",'auth',['caipiaoid'=>'73']);
+        }
         $xiabiao = strpos($res,'{');
         $res = \GuzzleHttp\json_decode(substr($res,$xiabiao),true);
         $data = $res['result'] ?? false;
         if(!$data) return UtilityHelper::renderJson([], 0, "阿里云接口失效");
-        return UtilityHelper::renderJson($data, 0, '成功');
+        return $data;
     }
 
 }

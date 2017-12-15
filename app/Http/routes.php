@@ -117,6 +117,7 @@ $app->group(['prefix' => 'api/v1'], function($app)
     $app->post('get_cqssc_num','AppController@get_cqssc_num');
 
     $app->get('add_cqssc','AppController@add_cqssc');
+    $app->get('add_cqsscs','AppController@add_cqsscs');
     $app->post('get_one','AppController@get_one');
     $app->post('get_ssc_history','AppController@get_ssc_history');
     $app->post('get_history_2x','AppController@get_history_2x');
