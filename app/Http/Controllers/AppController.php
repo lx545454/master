@@ -354,6 +354,40 @@ class AppController extends Controller
             }
         }
 
+        $arr1_7 = array();
+        foreach ($res_1 as $k=>$v){
+            $arr1_7[] = substr($v->num,0,2);
+            $arr1_7[] = substr($v->num,1,2);
+            $arr1_7[] = substr($v->num,2,2);
+            $arr1_7[] = substr($v->num,3,2);
+            $arr1_7[] = $v->num[0].$v->num[2];
+            $arr1_7[] = $v->num[1].$v->num[3];
+            $arr1_7[] = $v->num[2].$v->num[4];
+        }
+
+        $arr2_7 = array();
+        foreach ($res_2 as $k=>$v){
+            $arr2_7[] = substr($v->num,0,2);
+            $arr2_7[] = substr($v->num,1,2);
+            $arr2_7[] = substr($v->num,2,2);
+            $arr2_7[] = substr($v->num,3,2);
+            $arr2_7[] = $v->num[0].$v->num[2];
+            $arr2_7[] = $v->num[1].$v->num[3];
+            $arr2_7[] = $v->num[2].$v->num[4];
+        }
+
+        $arr3_7 = array();
+        foreach ($res_3 as $k=>$v){
+            $arr3_7[] = substr($v->num,0,2);
+            $arr3_7[] = substr($v->num,1,2);
+            $arr3_7[] = substr($v->num,2,2);
+            $arr3_7[] = substr($v->num,3,2);
+            $arr3_7[] = $v->num[0].$v->num[2];
+            $arr3_7[] = $v->num[1].$v->num[3];
+            $arr3_7[] = $v->num[2].$v->num[4];
+        }
+
+
 //        print_r($res1);print_r($res_1);die;
         $output = array();
 
@@ -365,6 +399,16 @@ class AppController extends Controller
         sort($output['arr2']);
         sort($output['arr3']);
         sort($output['arrAll']);
+
+        $output['arr1_7'] = array_unique($arr1_7);
+        $output['arr2_7'] = array_unique($arr2_7);
+        $output['arr3_7'] = array_unique($arr3_7);
+        $output['arrAll_7'] = array_intersect($arr1_7,$arr2_7,$arr3_7);
+        sort($output['arr1_7']);
+        sort($output['arr2_7']);
+        sort($output['arr3_7']);
+        sort($output['arrAll_7']);
+
         $output['qici'] = $qici;
         $output['num'] = $num;
 
@@ -398,11 +442,37 @@ class AppController extends Controller
             }else{
                 $output['zai3'] = 2;
             }
+
+            if(in_array($str_n_1,$output['arrAll_7']) && in_array($str_n_2,$output['arrAll_7']) &&in_array($str_n_3,$output['arrAll_7']) &&in_array($str_n_4,$output['arrAll_7']) ){
+                $output['zai_7'] = 1;
+            }else{
+                $output['zai_7'] = 2;
+            }
+            if(in_array($str_n_1,$output['arr1_7']) && in_array($str_n_2,$output['arr1_7']) && in_array($wb,$output['arr1_7'])){
+                $output['zai1_7'] = 1;
+            }else{
+                $output['zai1_7'] = 2;
+            }
+            if(in_array($str_n_2,$output['arr2_7']) && in_array($str_n_3,$output['arr2_7']) && in_array($qs,$output['arr2_7'])){
+                $output['zai2_7'] = 1;
+            }else{
+                $output['zai2_7'] = 2;
+            }
+            if(in_array($str_n_3,$output['arr3_7']) && in_array($str_n_4,$output['arr3_7']) && in_array($bg,$output['arr3_7'])){
+                $output['zai3_7'] = 1;
+            }else{
+                $output['zai3_7'] = 2;
+            }
         }else{
             $output['zai'] = 0;
             $output['zai1'] = 0;
             $output['zai2'] = 0;
             $output['zai3'] = 0;
+
+            $output['zai_7'] = 0;
+            $output['zai1_7'] = 0;
+            $output['zai2_7'] = 0;
+            $output['zai3_7'] = 0;
         }
         Logs::debug('3xend',$output['num']);
 
