@@ -375,13 +375,34 @@ class AppController extends Controller
             $str_n_2 = substr($res_n->num,1,2);
             $str_n_3 = substr($res_n->num,2,2);
             $str_n_4 = substr($res_n->num,3,2);
+            $wb = $res_n->num[0].$res_n->num[2];
+            $qs = $res_n->num[1].$res_n->num[3];
+            $bg = $res_n->num[2].$res_n->num[4];
             if(in_array($str_n_1,$output['arrAll']) && in_array($str_n_2,$output['arrAll']) &&in_array($str_n_3,$output['arrAll']) &&in_array($str_n_4,$output['arrAll']) ){
                 $output['zai'] = 1;
             }else{
                 $output['zai'] = 2;
             }
+            if(in_array($str_n_1,$output['arr1']) && in_array($str_n_2,$output['arr1']) && in_array($wb,$output['arr1'])){
+                $output['zai1'] = 1;
+            }else{
+                $output['zai1'] = 2;
+            }
+            if(in_array($str_n_2,$output['arr2']) && in_array($str_n_3,$output['arr2']) && in_array($qs,$output['arr2'])){
+                $output['zai2'] = 1;
+            }else{
+                $output['zai2'] = 2;
+            }
+            if(in_array($str_n_3,$output['arr3']) && in_array($str_n_4,$output['arr3']) && in_array($bg,$output['arr3'])){
+                $output['zai3'] = 1;
+            }else{
+                $output['zai3'] = 2;
+            }
         }else{
             $output['zai'] = 0;
+            $output['zai1'] = 0;
+            $output['zai2'] = 0;
+            $output['zai3'] = 0;
         }
 
         return $output;
