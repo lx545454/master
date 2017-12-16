@@ -404,6 +404,7 @@ class AppController extends Controller
             $output['zai2'] = 0;
             $output['zai3'] = 0;
         }
+        Logs::debug('3xend',$output['num']);
 
         return $output;
     }
