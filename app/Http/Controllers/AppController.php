@@ -283,7 +283,7 @@ class AppController extends Controller
             $num = str_replace(' ','',$data['number']);
             $qici = $data['issueno'];
         }
-
+        Logs::debug('3x',$qici);
 
         $str1 = substr($num,0,3);
         $str2 = substr($num,1,3);
