@@ -247,14 +247,28 @@ class AppController extends Controller
         if($res3){
 //            $qici3 = $res3->qici;
             $str3_1 = substr($res3->num,0,2);
-            $str3_2 = substr($res3->num,3,2);
-            if(in_array($str3_1,$arr1) && in_array($str3_2,$arr2)){
-                $output['zai'] = 1;
+            $str3_2 = substr($res3->num,1,2);
+            $str3_3 = substr($res3->num,2,2);
+            $str3_4 = substr($res3->num,3,2);
+            if(in_array($str3_1,$arr1) && in_array($str3_2,$arr1)){
+                $output['zai1'] = 1;
             }else{
-                $output['zai'] = 2;
+                $output['zai1'] = 2;
             }
+            if(in_array($str3_3,$arr2) && in_array($str3_4,$arr2)){
+                $output['zai2'] = 1;
+            }else{
+                $output['zai2'] = 2;
+            }
+//            if(in_array($str3_1,$arr1) && in_array($str3_2,$arr1)){
+//                $output['zai1'] = 1;
+//            }else{
+//                $output['zai1'] = 2;
+//            }
         }else{
             $output['zai'] = 0;
+            $output['zai1'] = 0;
+            $output['zai2'] = 0;
         }
 
         return $output;
