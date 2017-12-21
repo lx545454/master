@@ -284,6 +284,308 @@ class AppController extends Controller
         return UtilityHelper::renderJson($data, 0, '');
     }
 
+    public function get_demo(Request $request)
+    {
+        $updown = $request['updown'] ?? false;
+        $count = $request['count'] ?? 1;
+        $dui = $request['dui'] ?? false;
+        $startNum = $request['startNum'] ?? false;
+        $endNum = $request['endNum'] ?? false;
+        $qicis = $request['qicis'] ?? false;
+
+        $qiciArr = explode(',',$qicis);
+        $output = array();
+        foreach ($qiciArr as $k=>$v){
+            $data = DB::table('cqssc3')->where('qici','=',$v)->first();
+            if(!$data){
+                return UtilityHelper::renderJson([], 0, $v,'无效');
+            }
+
+            $sql="select * from t_cqssc3 where 1=1 ";
+
+            if($startNum && $endNum){
+                $str = substr($data->num,($startNum-1),$endNum);
+                if($dui){
+                    $sql .= " and SUBSTR(num,$startNum,$endNum)=$str ";
+                }else{
+                    $sql .= " and num like '%$str%' ";
+
+                }
+            }
+            if($updown){
+                $sql .= " and qici<'$v' order by qici desc limit $count ";
+            }else{
+                $sql .= " and qici>'$v' order by qici limit $count ";
+            }
+            $res = DB::select($sql);
+            if($res){
+                $output[$v] = $res;
+            }
+        }
+
+        return UtilityHelper::renderJson($output, 0, '');
+
+    }
+
+    public function get_3x_check_create(Request $request)
+    {
+        $count1 = $request['count1'] ?? 15;
+        $count2 = $request['count2'] ?? 15;
+        $count3 = $request['count3'] ?? 15;
+        $count_c = $request['count_c'] ?? 10;
+        $count_mohu = $request['count_mohu'] ?? 3;
+        $qici = $request['qici'] ?? false;
+
+        if($qici){
+            $data = DB::table('cqssc3')->where('qici','=',$qici)->first();
+            if(!$data) return UtilityHelper::renderJson([], 0, "该期次不存在");
+            $num = $data->num;
+        }else{
+            $res = REQ::requset_all("alicp_query",'auth',['caipiaoid'=>'73']);
+            $xiabiao = strpos($res,'{');
+            $res = \GuzzleHttp\json_decode(substr($res,$xiabiao),true);
+            $data = $res['result'] ?? false;
+            if(!$data) return UtilityHelper::renderJson([], 0, "阿里云接口失效");
+            $num = str_replace(' ','',$data['number']);
+            $qici = $data['issueno'];
+        }
+        Logs::debug('3x3x',$qici);
+
+        $str1 = substr($num,0,3);
+        $str2 = substr($num,1,3);
+        $str3 = substr($num,2,3);
+
+        //取最近一次对位号码
+        $res_d1 = DB::table('cqssc3')->where('num','like',$str2.'%')->where('qici','<',$qici)->orderBy('qici','desc')->first();
+        $res_d2 = DB::select("select * from t_cqssc3 where SUBSTR(num,2,3)=".$str2." and qici<'".$qici."' order by qici desc limit 1");
+        $res_d3 = DB::table('cqssc3')->where('num','like',"%".$str3)->where('qici','<',$qici)->orderBy('qici','desc')->first();
+        //取对位下期开奖结果
+        $res_d1_n = DB::table('cqssc3')->where('qici','>',$res_d1->qici)->orderBy('qici')->first();
+        $res_d2_n = DB::table('cqssc3')->where('qici','>',$res_d2->qici)->orderBy('qici')->first();
+        $res_d3_n = DB::table('cqssc3')->where('qici','>',$res_d3->qici)->orderBy('qici')->first();
+        $res_d1_n_str1 = substr($res_d1_n->num,0,3);
+        $res_d1_n_str2 = substr($res_d1_n->num,1,3);
+        $res_d1_n_str3 = substr($res_d1_n->num,2,3);
+        $res_d2_n_str1 = substr($res_d2_n->num,0,3);
+        $res_d2_n_str2 = substr($res_d2_n->num,1,3);
+        $res_d2_n_str3 = substr($res_d2_n->num,2,3);
+        $res_d3_n_str1 = substr($res_d3_n->num,0,3);
+        $res_d3_n_str2 = substr($res_d3_n->num,1,3);
+        $res_d3_n_str3 = substr($res_d3_n->num,2,3);
+        //对位期前三期 无需对位
+        $res_d1_res1 = DB::table('cqssc3')->where('num','like',"%".$str1."%")->where('qici','>',$res_d1->qici)->orderBy('qici','desc')->limit($count_mohu)->get()->toArray();
+        $res_d1_res2 = DB::table('cqssc3')->where('num','like',"%".$str2."%")->where('qici','>',$res_d2->qici)->orderBy('qici','desc')->limit($count_mohu)->get()->toArray();
+        $res_d1_res3 = DB::table('cqssc3')->where('num','like',"%".$str3."%")->where('qici','>',$res_d1->qici)->orderBy('qici','desc')->limit($count_mohu)->get()->toArray();
+
+        $res_d1_res1_arr1 = array();
+        foreach ($res_d1_res1 as $k3=>$v3){
+            $qici_d = $v3->qici;
+            $res_1 = DB::table('cqssc3')->where('qici','>',$qici_d)->orderBy('qici')->limit($count_c)->get()->toArray();
+            $res_d1_res1_arr1 = array();
+            foreach ($res_1 as $k=>$v){
+                for ($i=0;$i<5;$i++){
+                    for ($j=0;$j<5;$j++){
+                        if($i==$j){
+                            continue;
+                        }else{
+                            $str_a = $v->num[$i].$v->num[$j];
+                            if(!in_array($str_a,$res_d1_res1_arr1)){
+                                $res_d1_res1_arr1 = $str_a;
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+
+        $res_d1_res1_arr2 = array();
+        foreach ($res_d1_res2 as $k3=>$v3){
+            $qici_d = $v3->qici;
+            $res_1 = DB::table('cqssc3')->where('qici','>',$qici_d)->orderBy('qici')->limit($count_c)->get()->toArray();
+            $res_d1_res1_arr2 = array();
+            foreach ($res_1 as $k=>$v){
+                for ($i=0;$i<5;$i++){
+                    for ($j=0;$j<5;$j++){
+                        if($i==$j){
+                            continue;
+                        }else{
+                            $str_a = $v->num[$i].$v->num[$j];
+                            if(!in_array($str_a,$res_d1_res1_arr2)){
+                                $res_d1_res1_arr2 = $str_a;
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+
+        $res_d1_res1_arr3 = array();
+        foreach ($res_d1_res3 as $k3=>$v3){
+            $qici_d = $v3->qici;
+            $res_1 = DB::table('cqssc3')->where('qici','>',$qici_d)->orderBy('qici')->limit($count_c)->get()->toArray();
+            $res_d1_res1_arr3 = array();
+            foreach ($res_1 as $k=>$v){
+                for ($i=0;$i<5;$i++){
+                    for ($j=0;$j<5;$j++){
+                        if($i==$j){
+                            continue;
+                        }else{
+                            $str_a = $v->num[$i].$v->num[$j];
+                            if(!in_array($str_a,$res_d1_res1_arr3)){
+                                $res_d1_res1_arr3 = $str_a;
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+
+        $res1 = DB::table('cqssc3')->where('num','like',"%".$str1."%")->where('qici','<',$qici)->orderBy('qici','desc')->limit(3)->get()->toArray();
+        $res2 = DB::table('cqssc3')->where('num','like',"%".$str2."%")->where('qici','<',$qici)->orderBy('qici','desc')->limit(3)->get()->toArray();
+        $res3 = DB::table('cqssc3')->where('num','like',"%".$str3."%")->where('qici','<',$qici)->orderBy('qici','desc')->limit(3)->get()->toArray();
+
+
+        $arr1 = array();
+        foreach ($res1 as $k3=>$v3){
+            $qici1 = $v3->qici;
+            $res_1 = DB::table('cqssc3')->where('qici','>',$qici1)->orderBy('qici')->limit($count1)->get()->toArray();
+            $arr1[$k3]['a'] = array();
+            $arr1[$k3]['b'] = array();
+            foreach ($res_1 as $k=>$v){
+                for ($i=0;$i<5;$i++){
+                    for ($j=0;$j<5;$j++){
+                        if($i>=$j){
+                            continue;
+                        }else{
+                            $str_a = $v->num[$i].$v->num[$j];
+                            $str_b = $v->num[$j].$v->num[$i];
+                            if(!in_array($str_a,$arr1[$k3]['a'])){
+                                $arr1[$k3]['a'][] = $str_a;
+                                $arr1[$k3]['b'][] = $str_b;
+                            }
+                        }
+
+                    }
+                }
+            }
+            sort($arr1[$k3]['a']);
+            sort($arr1[$k3]['b']);
+        }
+
+        $arr2 = array();
+        foreach ($res2 as $k3=>$v3){
+            $qici1 = $v3->qici;
+            $res_1 = DB::table('cqssc3')->where('qici','>',$qici1)->orderBy('qici')->limit($count1)->get()->toArray();
+            $arr2[$k3]['a'] = array();
+            $arr2[$k3]['b'] = array();
+            foreach ($res_1 as $k=>$v){
+                for ($i=0;$i<5;$i++){
+                    for ($j=0;$j<5;$j++){
+                        if($i>=$j){
+                            continue;
+                        }else{
+                            $str_a = $v->num[$i].$v->num[$j];
+                            $str_b = $v->num[$j].$v->num[$i];
+                            if(!in_array($str_a,$arr2[$k3]['a'])){
+                                $arr2[$k3]['a'][] = $str_a;
+                                $arr2[$k3]['b'][] = $str_b;
+                            }
+                        }
+
+                    }
+                }
+            }
+            sort($arr2[$k3]['a']);
+            sort($arr2[$k3]['b']);
+        }
+
+        $arr3 = array();
+        foreach ($res3 as $k3=>$v3){
+            $qici1 = $v3->qici;
+            $res_1 = DB::table('cqssc3')->where('qici','>',$qici1)->orderBy('qici')->limit($count1)->get()->toArray();
+            $arr3[$k3]['a'] = array();
+            $arr3[$k3]['b'] = array();
+            foreach ($res_1 as $k=>$v){
+                for ($i=0;$i<5;$i++){
+                    for ($j=0;$j<5;$j++){
+                        if($i>=$j){
+                            continue;
+                        }else{
+                            $str_a = $v->num[$i].$v->num[$j];
+                            $str_b = $v->num[$j].$v->num[$i];
+                            if(!in_array($str_a,$arr3[$k3]['a'])){
+                                $arr3[$k3]['a'][] = $str_a;
+                                $arr3[$k3]['b'][] = $str_b;
+                            }
+                        }
+
+                    }
+                }
+            }
+            sort($arr3[$k3]['a']);
+            sort($arr3[$k3]['b']);
+        }
+
+
+
+
+
+
+//        print_r($res1);print_r($res_1);die;
+        $output = array();
+
+        $output['arr1'] = $arr1;
+        $output['arr2'] = $arr2;
+        $output['arr3'] = $arr3;
+
+
+
+        $output['qici'] = $qici;
+        $output['num'] = $num;
+
+        //下一期
+        $res_n = DB::table('cqssc3')->where('qici','>',$qici)->orderBy('qici')->first();
+        if($res_n){
+            $str_n_1 = substr($res_n->num,0,2);
+            $str_n_2 = substr($res_n->num,1,2);
+            $str_n_3 = substr($res_n->num,2,2);
+            $str_n_4 = substr($res_n->num,3,2);
+            $wb = $res_n->num[0].$res_n->num[2];
+            $qs = $res_n->num[1].$res_n->num[3];
+            $bg = $res_n->num[2].$res_n->num[4];
+            foreach ($output['arr1'] as $k=>&$v){
+                if(in_array($str_n_1,$v['a']) && in_array($str_n_2,$v['a']) && in_array($wb,$v['a'])){
+                    $v['zai'] = 1;
+                }else{
+                    $v['zai'] = 2;
+                }
+            }
+
+            foreach ($output['arr2'] as $k=>&$v){
+                if(in_array($str_n_2,$v['a']) && in_array($str_n_3,$v['a']) && in_array($qs,$v['a'])){
+                    $v['zai'] = 1;
+                }else{
+                    $v['zai'] = 2;
+                }
+            }
+
+            foreach ($output['arr3'] as $k=>&$v){
+                if(in_array($str_n_3,$v['a']) && in_array($str_n_4,$v['a']) && in_array($bg,$v['a'])){
+                    $v['zai'] = 1;
+                }else{
+                    $v['zai'] = 2;
+                }
+            }
+
+        }
+        Logs::debug('3x3xend',$output['num']);
+
+        return $output;
+    }
+
     public function get_history_3x_3x_one(Request $request)
     {
         $count1 = $request['count1'] ?? 15;
@@ -347,7 +649,7 @@ class AppController extends Controller
         $arr2 = array();
         foreach ($res2 as $k3=>$v3){
             $qici1 = $v3->qici;
-            $res_1 = DB::table('cqssc3')->where('qici','>',$qici1)->orderBy('qici')->limit($count1)->get()->toArray();
+            $res_1 = DB::table('cqssc3')->where('qici','>',$qici1)->orderBy('qici')->limit($count2)->get()->toArray();
             $arr2[$k3]['a'] = array();
             $arr2[$k3]['b'] = array();
             foreach ($res_1 as $k=>$v){
@@ -374,7 +676,7 @@ class AppController extends Controller
         $arr3 = array();
         foreach ($res3 as $k3=>$v3){
             $qici1 = $v3->qici;
-            $res_1 = DB::table('cqssc3')->where('qici','>',$qici1)->orderBy('qici')->limit($count1)->get()->toArray();
+            $res_1 = DB::table('cqssc3')->where('qici','>',$qici1)->orderBy('qici')->limit($count3)->get()->toArray();
             $arr3[$k3]['a'] = array();
             $arr3[$k3]['b'] = array();
             foreach ($res_1 as $k=>$v){
