@@ -292,7 +292,9 @@ class AppController extends Controller
         $startNum = $request['startNum'] ?? false;
         $endNum = $request['endNum'] ?? false;
         $qicis = $request['qicis'] ?? false;
-
+        if($qicis){
+           $qicis = str_replace(' ','',$qicis);
+        }
         $qiciArr = explode(',',$qicis);
         $output = array();
         foreach ($qiciArr as $k=>$v){
