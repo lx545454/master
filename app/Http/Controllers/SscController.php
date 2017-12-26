@@ -1025,7 +1025,8 @@ class SscController extends Controller
 //        $qici = $request['qici'] ?? "";
             $str = env('SSC_STR');
             $ssc = DB::table("game_ssc")->orderBy('id','desc')->first();
-            Logs::debug('check',json_decode($ssc));
+            $strtime = (strtotime($ssc->createTime)+$ssc->duration)-time();
+            Logs::debug('check',$strtime.'---'.json_encode($ssc));
             if($ssc){
                 if((strtotime($ssc->createTime)+$ssc->duration)<time()){
                     DB::table("game_ssc")->where('id',$ssc->id)->update([
