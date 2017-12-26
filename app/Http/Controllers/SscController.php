@@ -1000,7 +1000,7 @@ class SscController extends Controller
     }
 
     public function get_qicis($request=[]){
-        $ssc = DB::table('game_ssc')->where('num','<>',"0")->orderBy('id','desc')->get()->toArray();
+        $ssc = DB::table('game_ssc')->where('number','<>',"0")->orderBy('id','desc')->get()->toArray();
         if($ssc){
             return H::renderJson($ssc);
         }else{
