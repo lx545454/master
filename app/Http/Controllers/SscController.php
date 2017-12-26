@@ -929,9 +929,13 @@ class SscController extends Controller
     public function add_qici($request=[]){
         $peilv = "90";
         $ssc = DB::table('game_ssc')->orderBy('id','desc')->first();
-
-        if($ssc && isset($ssc->qici)){
-            $qici = $ssc->qici +1;
+        if($ssc){
+            $qici = $ssc->qici;
+        }else{
+            $qici = "17000001";
+        }
+        if($qici){
+            $qici += 1;
             $res = DB::table("game_ssc")->insert([
                 'qici'=>$qici,
                 'peilv'=>$peilv,
