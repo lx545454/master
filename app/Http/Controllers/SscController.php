@@ -877,16 +877,38 @@ class SscController extends Controller
     }
     public function getNum($request = []){
         $qici = $request['qici'] ?? "";
+        $str = $request['str'] ?? "";
+        if($str){
+            $str_arr = explode(',',$str);
+            foreach ($str_arr as &$item) {
+                $item+=100001;
+            }
+        }else{
+            $str_arr = [];
+        }
+
         $ssc = DB::table('game_ssc')->where('qici',$qici)->first();
         if($ssc && isset($ssc->qici)){
             $tableName = 'dicofnum_'.$qici;
-            $limitMoney = ($ssc->peilv*$ssc->money/100 - rand(0,20))*100000/58000;//用100000来规避小数类型
-            $numRes = DB::table($tableName)->whereBetween('num', [$limitMoney-100, $limitMoney])->first();
-            if(!isset($numRes->wan)){
-                $numRes = DB::table($tableName)->where('num', '<', $limitMoney)->orderBy('id',"DESC")->first();
+            $limitMoney = ($ssc->peilv*$ssc->money/100)*100000;//用100000来规避小数类型
+            $db = DB::table($tableName)->where('num', '<=',$limitMoney);
+            if($str_arr){
+                $db = $db->whereIn('id',$str_arr);
             }
+//            $limitMoney = ($ssc->peilv*$ssc->money/100 - rand(0,20))*100000/58000;//用100000来规避小数类型
+//            $numRes = DB::table($tableName)->whereBetween('num', [$limitMoney-100, $limitMoney])->first();
+            $numRes = $db->get()->toArray();
+            if(!$numRes){
+                $numRes = DB::table($tableName)->where('num', '<=',$limitMoney)->get()->toArray();
+            }
+            $count = count($numRes);
+            $key = rand(0,($count-1));
+            $numRes = $numRes[$key];
             $data = ['number'=>$numRes->wan.','.$numRes->qian.','.$numRes->bai.','.$numRes->shi.','.$numRes->ge];
-            return H::renderJson($data, 0,"第{$qici}期开奖结果");
+            DB::table("game_ssc")->where('id',$ssc->id)->update([
+                'number' => $numRes->wan.' '.$numRes->qian.' '.$numRes->bai.' '.$numRes->shi.' '.$numRes->ge,
+            ]);
+//            return H::renderJson($data, 0,"第{$qici}期开奖结果");
         }else{
             return H::showErrorMess("未传入期次或其次不存在");
         }
@@ -905,7 +927,7 @@ class SscController extends Controller
     }
 
     public function add_qici($request=[]){
-        $peilv = "58";
+        $peilv = "90";
         $ssc = DB::table('game_ssc')->orderBy('id','desc')->first();
 
         if($ssc && isset($ssc->qici)){
@@ -914,6 +936,7 @@ class SscController extends Controller
                 'qici'=>$qici,
                 'peilv'=>$peilv,
                 'state'=>'1',
+                'duration'=>'120',
             ]);
             if($res){
                 $createRes = DB::select("call insert_test_val('{$qici}');");
@@ -971,7 +994,7 @@ class SscController extends Controller
     }
 
     public function get_qicis($request=[]){
-        $ssc = DB::table('game_ssc')->get()->toArray();
+        $ssc = DB::table('game_ssc')->orderBy('id','desc')->get()->toArray();
         if($ssc){
             return H::renderJson($ssc);
         }else{
@@ -992,17 +1015,24 @@ class SscController extends Controller
         }
     }
 
-    public function fanjiang($request=[]){
-        $qici = $request['qici'] ?? "";
-        if($qici){
-            $ssc = DB::table("ssc_order")->where('qici','=',$qici)->get()->toArray();
-//            foreach (){
-//
-//            }
-            return H::renderJson($ssc);
-        }else{
-            return H::showErrorMess("需要期次");
-        }
+    public function checkssc($request=[]){
+//        $qici = $request['qici'] ?? "";
+            $str = env('SSC_STR');
+            $ssc = DB::table("game_ssc")->orderBy('id','desc')->first();
+            if($ssc){
+                if((strtotime($ssc->createTime)+$ssc->duration)<time()){
+                    DB::table("game_ssc")->where('id',$ssc->id)->update([
+                        'state' => '2',
+                    ]);
+                    self::getNum(['str'=>$str,'qici'=>$ssc->qici]);
+                    self::add_qici();
+
+                }else{
+                    echo "未结束";
+                }
+            }else{
+                self::add_qici();
+            }
     }
 
     //返奖规则
