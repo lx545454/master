@@ -196,7 +196,7 @@ class Request
         try {
             $res = $client->request(strtoupper($method), $url, $options);var_dump($res);
         } catch (\Exception $e) {
-//            print_r($e->getMessage());die;
+            print_r($e->getMessage());
             return UtilityHelper::showError(40000);
         }
         if ($res->getStatusCode() == 200) {
