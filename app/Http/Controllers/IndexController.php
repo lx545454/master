@@ -26,7 +26,7 @@ class IndexController extends Controller
         $pageSize = $request->input('pageSize', 10);
         $page = $request->input('page', 1);
         $skip = (abs((int)$page)-1)*$pageSize;
-
+echo "a";
         $query = Lunbotu::query();
 //        if ($id) $query = $query->where('id', '=', $id);
 //        if ($type != '') $query = $query->where('type', '=', $type);
@@ -34,9 +34,9 @@ class IndexController extends Controller
 
 //        $count = $query->count();
         $lunbo = $query->skip($skip)->take($pageSize)->get()->toArray();
-
-        $query_xiaoxi = Xiaoxi::query();
-        $xiaoxi = $query_xiaoxi->get()->toArray();
+        echo "b";
+        $query_xiaoxi = Xiaoxi::query();echo "c";
+        $xiaoxi = $query_xiaoxi->get()->toArray();echo "d";
         $data['lunbo'] = $lunbo;
         $data['gonggao'] = $xiaoxi;
         $data['caipiao'] = $this->get_caipiao_arr();
