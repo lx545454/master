@@ -204,7 +204,7 @@ class Request
             $data = \json_decode($res->getBody(), true);
             Log::info('outLog',['url'=>$url,'option'=>$options,'data'=>$data]);
 //            dd($url, $options, $data);
-
+            print_r($data);
             return $data;
         }
 //        Log::warn('BD request error '.$url.' status code '.$res->getStatusCode().' body '.$res->getBody());
