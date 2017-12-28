@@ -117,7 +117,7 @@ class Request
         $options = [
             'connect_timeout' => 3,
             'form_params' => $params,
-        ];
+        ];print_r($params);
         return self::request($method,$url, $params,$options);
     }
 
