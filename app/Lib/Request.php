@@ -80,7 +80,7 @@ class Request
 //            $sign_key = "QIANYUN";
 //        }
 //        $params['sign'] = UtilityHelper::createSign_lm($params,$sign_key);
-        echo "z1";
+
         if(isset(self::$arr[$key])){
             $api = self::$arr[$key];
             $url_ = $api[0];
@@ -91,7 +91,6 @@ class Request
                 case 'json':
                     return self::request_json($method,$url_,$uri,$params);break;
                 case 'form':
-                    echo "z2";
                     return self::request_form($method,$url_,$uri,$params);break;
                 case 'query':
                     return self::request_query($method,$url_,$uri,$params);break;
@@ -114,6 +113,7 @@ class Request
 
     public static function request_form($method,$url_, $uri, $params = []){
         $url = env($url_).$uri;
+        echo $url;
         $options = [
             'connect_timeout' => 3,
             'form_params' => $params,
@@ -193,9 +193,8 @@ class Request
                 'json' => $params,
             ];
         }
-        echo "z4";
         try {
-            $res = $client->request(strtoupper($method), $url, $options);print_r($res);
+            $res = $client->request(strtoupper($method), $url, $options);
         } catch (\Exception $e) {
 //            print_r($e->getMessage());die;
             return UtilityHelper::showError(40000);

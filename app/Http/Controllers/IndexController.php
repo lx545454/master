@@ -26,7 +26,7 @@ class IndexController extends Controller
         $pageSize = $request->input('pageSize', 10);
         $page = $request->input('page', 1);
         $skip = (abs((int)$page)-1)*$pageSize;
-echo "a";
+
         $query = Lunbotu::query();
 //        if ($id) $query = $query->where('id', '=', $id);
 //        if ($type != '') $query = $query->where('type', '=', $type);
@@ -34,13 +34,13 @@ echo "a";
 
 //        $count = $query->count();
         $lunbo = $query->skip($skip)->take($pageSize)->get()->toArray();
-        echo "b";
-        $query_xiaoxi = Xiaoxi::query();echo "c";
-        $xiaoxi = $query_xiaoxi->get()->toArray();echo "d";
+
+        $query_xiaoxi = Xiaoxi::query();
+        $xiaoxi = $query_xiaoxi->get()->toArray();
         $data['lunbo'] = $lunbo;
         $data['gonggao'] = $xiaoxi;
         $data['caipiao'] = $this->get_caipiao_arr();
-        print_r($data);die;
+
         return UtilityHelper::renderJson($data, 0, '');
     }
 
@@ -72,7 +72,7 @@ echo "a";
     public function get_caipiao_arr(){
         if (app('cache')->has('caipiao_list')) {
             return app('cache')->get('caipiao_list');
-        }echo "e";
+        }
         $sub_data['caipiaoids'] = "11 12 14 16";
         $sub_data['appkey'] = env('JS_APPKEY');
         $cpArr = explode(' ',$sub_data['caipiaoids']);
@@ -82,13 +82,13 @@ echo "a";
                 'appkey'=>$sub_data['appkey'],
                 'caipiaoid' => $v,
             ];
-            $res = REQ::requset_all('caipiao_query','form',$param);echo "e1";
+            $res = REQ::requset_all('caipiao_query','form',$param);
             if(isset($res['status']) && $res['status'] == "0"){
-                $res['result']['lottery_code'] = Caipiao::getLotteryCode($res['result']['caipiaoid']);echo "e2";
+                $res['result']['lottery_code'] = Caipiao::getLotteryCode($res['result']['caipiaoid']);
                 $subArr[] = $res['result'];
             }
-        }echo "f";
-        app('cache')->put('caipiao_list',$subArr,60);echo "g";
+        }
+        app('cache')->put('caipiao_list',$subArr,60);
         return $subArr;
     }
 
