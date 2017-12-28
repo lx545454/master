@@ -195,7 +195,7 @@ class Request
         }
         echo "z4";
         try {
-            $res = $client->request(strtoupper($method), $url, $options);
+            $res = $client->request(strtoupper($method), $url, $options);echo "z5";
         } catch (\Exception $e) {
 //            print_r($e->getMessage());die;
             return UtilityHelper::showError(40000);
