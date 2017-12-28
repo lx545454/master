@@ -72,7 +72,7 @@ echo "a";
     public function get_caipiao_arr(){
         if (app('cache')->has('caipiao_list')) {
             return app('cache')->get('caipiao_list');
-        }
+        }echo "e";
         $sub_data['caipiaoids'] = "11 12 14 16";
         $sub_data['appkey'] = env('JS_APPKEY');
         $cpArr = explode(' ',$sub_data['caipiaoids']);
@@ -87,8 +87,8 @@ echo "a";
                 $res['result']['lottery_code'] = Caipiao::getLotteryCode($res['result']['caipiaoid']);
                 $subArr[] = $res['result'];
             }
-        }
-        app('cache')->put('caipiao_list',$subArr,60);
+        }echo "f";
+        app('cache')->put('caipiao_list',$subArr,60);echo "g";
         return $subArr;
     }
 
