@@ -113,11 +113,11 @@ class Request
 
     public static function request_form($method,$url_, $uri, $params = []){
         $url = env($url_).$uri;
-        echo $url;
+
         $options = [
             'connect_timeout' => 3,
             'form_params' => $params,
-        ];print_r($params);
+        ];
         return self::request($method,$url, $params,$options);
     }
 
@@ -194,9 +194,9 @@ class Request
             ];
         }
         try {
-            $res = $client->request(strtoupper($method), $url, $options);var_dump($res);
+            $res = $client->request(strtoupper($method), $url, $options);
         } catch (\Exception $e) {
-            print_r($e->getMessage());
+//            print_r($e->getMessage());die;
             return UtilityHelper::showError(40000);
         }
         if ($res->getStatusCode() == 200) {
@@ -204,7 +204,7 @@ class Request
             $data = \json_decode($res->getBody(), true);
             Log::info('outLog',['url'=>$url,'option'=>$options,'data'=>$data]);
 //            dd($url, $options, $data);
-            print_r($data);
+
             return $data;
         }
 //        Log::warn('BD request error '.$url.' status code '.$res->getStatusCode().' body '.$res->getBody());
