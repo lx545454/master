@@ -40,7 +40,7 @@ class IndexController extends Controller
         $data['lunbo'] = $lunbo;
         $data['gonggao'] = $xiaoxi;
         $data['caipiao'] = $this->get_caipiao_arr();
-
+        print_r($data);die;
         return UtilityHelper::renderJson($data, 0, '');
     }
 

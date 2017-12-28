@@ -34,6 +34,7 @@ $app->group(['prefix' => 'api/v1'], function($app)
     $app->post('recharge','PayController@recharge');
 
     $app->post('lunbotu','IndexController@lunbotu');
+    $app->get('lunbotu','IndexController@lunbotu');
     $app->post('push2app','PushController@push');
     $app->post('get_current_period','FactoryController@super');
     $app->post('get_dlt_example','FactoryController@super');
