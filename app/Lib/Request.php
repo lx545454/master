@@ -194,7 +194,7 @@ class Request
             ];
         }
         try {
-            $res = $client->request(strtoupper($method), $url, $options);
+            $res = $client->request(strtoupper($method), $url, $options);var_dump($res);
         } catch (\Exception $e) {
 //            print_r($e->getMessage());die;
             return UtilityHelper::showError(40000);
