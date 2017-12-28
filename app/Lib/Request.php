@@ -195,14 +195,14 @@ class Request
         try {
             $res = $client->request(strtoupper($method), $url, $options);
         } catch (\Exception $e) {
-//            print_r($e->getMessage());die;
+            print_r($e->getMessage());die;
             return UtilityHelper::showError(40000);
         }
         if ($res->getStatusCode() == 200) {
 //            Log::info('BD response: '.$res->getBody());
             $data = \json_decode($res->getBody(), true);
             Log::info('outLog',['url'=>$url,'option'=>$options,'data'=>$data]);
-            dd($url, $options, $data);
+//            dd($url, $options, $data);
 
             return $data;
         }
