@@ -63,8 +63,8 @@ class Request
         'analyst_project_moreLists' => array("API_CZD",'analyst/project/moreLists','POST'),
 
         //极速
-        'caipiao_query' => array("API_JS",'caipiao/query','POST'),
-        'caipiao_history' => array("API_JS",'caipiao/history','POST'),
+        'caipiao_query' => array("API_JS",'caipiao/query','GET'),
+        'caipiao_history' => array("API_JS",'caipiao/history','GET'),
 
         //竞猜
         'jingcai' => array("API_JC",'test/test.go',"POST"),
