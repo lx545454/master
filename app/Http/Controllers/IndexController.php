@@ -82,9 +82,9 @@ echo "a";
                 'appkey'=>$sub_data['appkey'],
                 'caipiaoid' => $v,
             ];
-            $res = REQ::requset_all('caipiao_query','form',$param);
+            $res = REQ::requset_all('caipiao_query','form',$param);echo "e1";
             if(isset($res['status']) && $res['status'] == "0"){
-                $res['result']['lottery_code'] = Caipiao::getLotteryCode($res['result']['caipiaoid']);
+                $res['result']['lottery_code'] = Caipiao::getLotteryCode($res['result']['caipiaoid']);echo "e2";
                 $subArr[] = $res['result'];
             }
         }echo "f";
