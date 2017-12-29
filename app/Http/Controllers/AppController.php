@@ -158,7 +158,9 @@ class AppController extends Controller
         $request['count'] = $request['count'] ??  30;
         $request['startDate'] = $request['startDate'] ??  date("Y-m-d");
         $request['endDate'] = $request['endDate'] ?? date("Y-m-d",strtotime("+1 day"));
-        $res = DB::table('cqssc3')->where('opendate','>',$request['startDate'])->where('opendate','<',$request['endDate'])->orderBy('qici')->get()->toArray();
+        $res = DB::table('cqssc3')->where('opendate','>',$request['startDate'])->where('opendate','<',$request['endDate'])->orderBy('qici')->toSql();
+//        get()->toArray();
+        return UtilityHelper::renderJson(['sql'=>$res], 0, '');
         $data['dui'] = 0;
         if($res){
             foreach ($res as $k=>$v){
