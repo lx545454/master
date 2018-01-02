@@ -94,6 +94,8 @@ class Request
                     return self::request_form($method,$url_,$uri,$params);break;
                 case 'query':
                     return self::request_query($method,$url_,$uri,$params);break;
+                case 'js':
+                    return self::request_js($method,$url_,$uri,$params);break;
                 case 'auth':
                     return self::request_auth($method,$url_,$uri,$params);break;
                 default:
@@ -123,9 +125,11 @@ class Request
 
     public static function request_query($method,$url_, $uri, $params = []){
         $url = env($url_).$uri;
+        $url.="?".http_build_query($params);
+        echo $url;
         $options = [
             'connect_timeout' => 3,
-//            'query' => $params,
+            'query' => $params,
         ];
         return self::request($method,$url, $params,$options);
     }
@@ -151,6 +155,28 @@ class Request
             curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
         }
         return curl_exec($curl);
+
+    }
+
+    public static function request_js($method,$url_, $uri, $params = []){
+        $url = env($url_).$uri;
+        $querys = http_build_query($params);
+        $url = $url.'?'.$querys;
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_FAILONERROR, false);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_HEADER, true);
+        if (1 == strpos("$".$url, "https://"))
+        {
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        }
+        $res = curl_exec($curl);
+        $xiabiao = strpos($res,'{');
+        $res = \GuzzleHttp\json_decode(substr($res,$xiabiao),true);
+        return $res;
 
     }
 

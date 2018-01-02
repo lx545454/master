@@ -32,10 +32,10 @@ class AppController extends Controller
 
     public function get_cqssc(Request $request)
     {
-        $sub_data['caipiaoid'] = "73";
         $sub_data['appkey'] = env('JS_APPKEY');
+        $sub_data['caipiaoid'] = "73";
         $sub_data['num'] = "100";
-        $res = REQ::requset_all('caipiao_history','form',$sub_data);
+        $res = REQ::requset_all('caipiao_history','js',$sub_data);
         if(isset($res['status']) && $res['status'] == "0"){
             return UtilityHelper::renderJson($res, 0, '');
         }
