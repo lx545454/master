@@ -220,9 +220,9 @@ class AppController extends Controller
         $qici2 = $res2[0]->qici;
         $qici3 = $res3->qici;
         $output = array();
-        $output[] = DB::table('cqssc3')->where('qici','>=',$qici1)->orderBy('qici')->limit($count)->get()->toArray();
-        $output[] = DB::table('cqssc3')->where('qici','>=',$qici2)->orderBy('qici')->limit($count)->get()->toArray();
-        $output[] = DB::table('cqssc3')->where('qici','>=',$qici3)->orderBy('qici')->limit($count)->get()->toArray();
+        $output[] = DB::table('cqssc3')->where('qici','>',$qici1)->orderBy('qici')->limit($count)->get()->toArray();
+        $output[] = DB::table('cqssc3')->where('qici','>',$qici2)->orderBy('qici')->limit($count)->get()->toArray();
+        $output[] = DB::table('cqssc3')->where('qici','>',$qici3)->orderBy('qici')->limit($count)->get()->toArray();
 
         return $output;
 
