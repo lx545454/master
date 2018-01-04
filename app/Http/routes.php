@@ -123,6 +123,7 @@ $app->group(['prefix' => 'api/v1'], function($app)
     $app->post('get_one','AppController@get_one');
     $app->post('get_ssc_history','AppController@get_ssc_history');
     $app->post('get_history_2x','AppController@get_history_2x');
+    $app->post('get_history_2x2','AppController@get_history_2x2');
     $app->post('get_history_3x','AppController@get_history_3x');
     $app->post('get_history_3x_3x','AppController@get_history_3x_3x');
     $app->post('get_history_2x_list','AppController@get_history_2x_list');

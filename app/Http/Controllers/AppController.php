@@ -10,6 +10,7 @@ use App\Lib\Request as REQ;
 use App\Xiaoxi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Input;
 use Log;
 use Mockery\CountValidator\Exception;
 
@@ -181,6 +182,51 @@ class AppController extends Controller
         return UtilityHelper::renderJson($data, 0, '');
     }
 
+    public function get_history_2x2(){
+        $post = array_filter(Input::all());
+
+        $data = self::get_history_2x_one2($post);
+        return UtilityHelper::renderJson($data, 0, '');
+    }
+
+    public function get_history_2x_one2($post)
+    {
+        $count = $post['count'] ?? 5;
+        $qici = $post['qici'] ?? false;
+
+        if ($qici) {
+            $data = DB::table('cqssc3')->where('qici', '=', $qici)->first();
+            if (!$data) return UtilityHelper::renderJson([], 0, "该期次不存在");
+            $num = $data->num;
+        } else {
+            $res = REQ::requset_all("alicp_query", 'auth', ['caipiaoid' => '73']);
+            $xiabiao = strpos($res, '{');
+            $res = \GuzzleHttp\json_decode(substr($res, $xiabiao), true);
+            $data = $res['result'] ?? false;
+            if (!$data) return UtilityHelper::renderJson([], 0, "阿里云接口失效");
+            $num = str_replace(' ', '', $data['number']);
+            $qici = $data['issueno'];
+        }
+
+        $str1 = substr($num,0,3);
+        $str2 = substr($num,1,3);
+        $str3 = substr($num,2,3);
+
+        $res1 = DB::table('cqssc3')->where('num','like',$str1."%")->where('qici','<',$qici)->orderBy('qici','desc')->first();
+        $res2 = DB::select("select * from t_cqssc3 where SUBSTR(num,2,3)=".$str2." and qici<'".$qici."' order by qici desc limit 1");//返回结果是多维数组
+        $res3 = DB::table('cqssc3')->where('num','like',"%".$str3)->where('qici','<',$qici)->orderBy('qici','desc')->first();
+
+        $qici1 = $res1->qici;
+        $qici2 = $res2[0]->qici;
+        $qici3 = $res3->qici;
+        $output = array();
+        $output[] = DB::table('cqssc3')->where('qici','>=',$qici1)->orderBy('qici')->limit($count)->get()->toArray();
+        $output[] = DB::table('cqssc3')->where('qici','>=',$qici2)->orderBy('qici')->limit($count)->get()->toArray();
+        $output[] = DB::table('cqssc3')->where('qici','>=',$qici3)->orderBy('qici')->limit($count)->get()->toArray();
+
+        return $output;
+
+    }
 
     public function get_history_2x_one(Request $request)
     {
