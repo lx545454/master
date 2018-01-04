@@ -223,7 +223,7 @@ class AppController extends Controller
         $output[] = DB::table('cqssc3')->where('qici','>',$qici1)->orderBy('qici')->limit($count)->get()->toArray();
         $output[] = DB::table('cqssc3')->where('qici','>',$qici2)->orderBy('qici')->limit($count)->get()->toArray();
         $output[] = DB::table('cqssc3')->where('qici','>',$qici3)->orderBy('qici')->limit($count)->get()->toArray();
-
+        $output['qici'] = $qici;
         return $output;
 
     }
