@@ -306,11 +306,11 @@ class AppController extends Controller
             }else{
                 $output['zai2'] = 2;
             }
-//            if(in_array($str3_1,$arr1) && in_array($str3_2,$arr1)){
-//                $output['zai1'] = 1;
-//            }else{
-//                $output['zai1'] = 2;
-//            }
+            if($output['zai1']==1 && $output['zai2']==1){
+                $output['zai'] = 1;
+            }else{
+                $output['zai'] = 2;
+            }
         }else{
             $output['zai'] = 0;
             $output['zai1'] = 0;
