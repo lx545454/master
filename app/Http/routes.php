@@ -129,5 +129,8 @@ $app->group(['prefix' => 'api/v1'], function($app)
     $app->post('get_history_2x_list','AppController@get_history_2x_list');
     $app->post('get_history_3x_list','AppController@get_history_3x_list');
     $app->post('get_demo','AppController@get_demo');
+    $app->post('fangan_save','FanganController@save');
+    $app->post('fangan_get','FanganController@get');
+    $app->post('fangan_getList','FanganController@getList');
 
 });
