@@ -177,6 +177,26 @@ class AppController extends Controller
 
     }
 
+    public function get_history_2x3_list(Request $request){
+        $data = array();
+        $request['count'] = $request['count'] ??  30;
+        $request['startDate'] = $request['startDate'] ??  date("Y-m-d");
+        $request['endDate'] = $request['endDate'] ?? date("Y-m-d",strtotime("+1 day"));
+        $res = DB::table('cqssc3')->where('opendate','>',$request['startDate'])->where('opendate','<',$request['endDate'])->orderBy('qici')->get()->toArray();
+        $data['dui'] = 0;
+        if($res){
+            foreach ($res as $k=>$v){
+                $request['qici'] = $v->qici;
+                $one = self::get_history_2x_one3($request);
+                $data[] = $one;
+
+            }
+        }
+        return UtilityHelper::renderJson($data, 0, '');
+
+
+    }
+
     public function get_history_2x(Request $request){
         $data = self::get_history_2x_one($request);
         return UtilityHelper::renderJson($data, 0, '');
@@ -262,26 +282,142 @@ class AppController extends Controller
         $res2 = DB::select("select * from t_cqssc3 where SUBSTR(num,2,3)=".$str2." and qici<'".$qici."' order by qici desc limit $count");//返回结果是多维数组
         $res3 = DB::table('cqssc3')->where('num','like',"%".$str3)->where('qici','<',$qici)->orderBy('qici','desc')->limit($count)->get()->toArray();
 
-        $ouput_1=[];
-        $ouput_2=[];
-        $ouput_3=[];
+        $output_1=[];
+        $output_2=[];
+        $output_3=[];
         foreach ($res1 as $k=>$v){
             $qici1_1 = $v->qici;
-            $ouput_1[] = DB::table('cqssc3')->where('qici','>',$qici1_1)->orderBy('qici')->first();
+            $output_1[] = DB::table('cqssc3')->where('qici','>',$qici1_1)->orderBy('qici')->first();
         }
         foreach ($res2 as $k=>$v){
             $qici1_1 = $v->qici;
-            $ouput_2[] = DB::table('cqssc3')->where('qici','>',$qici1_1)->orderBy('qici')->first();
+            $output_2[] = DB::table('cqssc3')->where('qici','>',$qici1_1)->orderBy('qici')->first();
         }
         foreach ($res3 as $k=>$v){
             $qici1_1 = $v->qici;
-            $ouput_3[] = DB::table('cqssc3')->where('qici','>',$qici1_1)->orderBy('qici')->first();
+            $output_3[] = DB::table('cqssc3')->where('qici','>',$qici1_1)->orderBy('qici')->first();
         }
         $output = array();
-        $output[] = $ouput_1;
-        $output[] = $ouput_2;
-        $output[] = $ouput_3;
+        $output[] = $output_1;
+        $output[] = $output_2;
+        $output[] = $output_3;
         $output['qici'] = $qici;
+
+        $arr1 = array();
+        foreach ($output_1 as $k=>$v){
+            for ($i=0;$i<5;$i++){
+                for ($j=0;$j<5;$j++){
+                    if($i==$j){
+                        continue;
+                    }else{
+                        $str_a = $v->num[$i].$v->num[$j];
+                        if(!in_array($str_a,$arr1)){
+                            $arr1[] = $str_a;
+                        }
+                    }
+
+                }
+            }
+        }
+        $arr2 = array();
+        foreach ($output_2 as $k=>$v){
+            for ($i=0;$i<5;$i++){
+                for ($j=0;$j<5;$j++){
+                    if($i==$j){
+                        continue;
+                    }else{
+                        $str_a = $v->num[$i].$v->num[$j];
+                        if(!in_array($str_a,$arr2)){
+                            $arr2[] = $str_a;
+                        }
+                    }
+
+                }
+            }
+        }
+
+        $arr3 = array();
+        foreach ($output_3 as $k=>$v){
+            for ($i=0;$i<5;$i++){
+                for ($j=0;$j<5;$j++){
+                    if($i==$j){
+                        continue;
+                    }else{
+                        $str_a = $v->num[$i].$v->num[$j];
+                        if(!in_array($str_a,$arr3)){
+                            $arr3[] = $str_a;
+                        }
+                    }
+
+                }
+            }
+        }
+        sort($arr1);
+        sort($arr2);
+        sort($arr3);
+        $output['arr1'] = implode(' ',$arr1);
+        $output['arr2'] = implode(' ',$arr2);
+        $output['arr3'] = implode(' ',$arr3);
+        //下一期
+        $res3 = DB::table('cqssc3')->where('qici','>',$qici)->orderBy('qici')->first();
+        if($res3){
+//            $qici3 = $res3->qici;
+            $str3_1 = substr($res3->num,0,2);
+            $str3_2 = substr($res3->num,1,2);
+            $str3_3 = substr($res3->num,2,2);
+            $str3_4 = substr($res3->num,3,2);
+
+            $str3_13 =$res->num[0].$res->num[2];
+            $str3_24 =$res->num[1].$res->num[3];
+            $str3_35 =$res->num[2].$res->num[4];
+            if(in_array($str3_1,$arr1) && in_array($str3_2,$arr1)){
+                $output['zai1'] = 1;
+            }else{
+                $output['zai1'] = 2;
+            }
+            if(in_array($str3_1,$arr1) && in_array($str3_2,$arr1) && in_array($str3_13,$arr1)){
+                $output['zai1x3'] = 1;
+            }else{
+                $output['zai1x3'] = 2;
+            }
+
+            if(in_array($str3_2,$arr2) && in_array($str3_3,$arr2)){
+                $output['zai2'] = 1;
+            }else{
+                $output['zai2'] = 2;
+            }
+            if(in_array($str3_2,$arr2) && in_array($str3_3,$arr2) && in_array($str3_24,$arr2)){
+                $output['zai2x3'] = 1;
+            }else{
+                $output['zai2x3'] = 2;
+            }
+
+            if(in_array($str3_3,$arr2) && in_array($str3_4,$arr3)){
+                $output['zai3'] = 1;
+            }else{
+                $output['zai3'] = 2;
+            }
+            if(in_array($str3_3,$arr2) && in_array($str3_4,$arr2) && in_array($str3_35,$arr3)){
+                $output['zai3x3'] = 1;
+            }else{
+                $output['zai3x3'] = 2;
+            }
+
+//
+//            if($output['zai1']==1 && $output['zai2']==1){
+//                $output['zai'] = 1;
+//            }else{
+//                $output['zai'] = 2;
+//            }
+        }else{
+            $output['zai'] = 0;
+            $output['zai1'] = 0;
+            $output['zai2'] = 0;
+            $output['zai3'] = 0;
+            $output['zai1x3'] = 0;
+            $output['zai2x3'] = 0;
+            $output['zai3x3'] = 0;
+        }
         return $output;
 
     }
