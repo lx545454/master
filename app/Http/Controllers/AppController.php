@@ -184,11 +184,18 @@ class AppController extends Controller
         $request['endDate'] = $request['endDate'] ?? date("Y-m-d",strtotime("+1 day"));
         $res = DB::table('cqssc3')->where('opendate','>',$request['startDate'])->where('opendate','<',$request['endDate'])->orderBy('qici')->get()->toArray();
         $data['dui'] = 0;
+        $data['duix3'] = 0;
         if($res){
             foreach ($res as $k=>$v){
                 $request['qici'] = $v->qici;
-                $one = self::get_history_2x_one3($request);
+                $one = self::get_history_2x_one3($request,false);
                 $data[] = $one;
+                if($one['zai'] == 1){
+                    $data['dui']++;
+                }
+                if($one['zaix3'] == 1){
+                    $data['duix3']++;
+                }
 
             }
         }
@@ -255,7 +262,7 @@ class AppController extends Controller
         return UtilityHelper::renderJson($data, 0, '');
     }
 
-    public function get_history_2x_one3($post)
+    public function get_history_2x_one3($post,$isone = true)
     {
         $count = $post['count'] ?? 5;
         $qici = $post['qici'] ?? false;
@@ -352,12 +359,15 @@ class AppController extends Controller
                 }
             }
         }
-        sort($arr1);
-        sort($arr2);
-        sort($arr3);
-        $output['arr1'] = implode(' ',$arr1);
-        $output['arr2'] = implode(' ',$arr2);
-        $output['arr3'] = implode(' ',$arr3);
+        if($isone){
+            sort($arr1);
+            sort($arr2);
+            sort($arr3);
+            $output['arr1'] = implode(' ',$arr1);
+            $output['arr2'] = implode(' ',$arr2);
+            $output['arr3'] = implode(' ',$arr3);
+        }
+
         //下一期
         $res3 = DB::table('cqssc3')->where('qici','>',$qici)->orderBy('qici')->first();
         if($res3){
@@ -367,9 +377,9 @@ class AppController extends Controller
             $str3_3 = substr($res3->num,2,2);
             $str3_4 = substr($res3->num,3,2);
 
-            $str3_13 =$res->num[0].$res->num[2];
-            $str3_24 =$res->num[1].$res->num[3];
-            $str3_35 =$res->num[2].$res->num[4];
+            $str3_13 =$res3->num[0].$res3->num[2];
+            $str3_24 =$res3->num[1].$res3->num[3];
+            $str3_35 =$res3->num[2].$res3->num[4];
             if(in_array($str3_1,$arr1) && in_array($str3_2,$arr1)){
                 $output['zai1'] = 1;
             }else{
@@ -403,12 +413,18 @@ class AppController extends Controller
                 $output['zai3x3'] = 2;
             }
 
-//
-//            if($output['zai1']==1 && $output['zai2']==1){
-//                $output['zai'] = 1;
-//            }else{
-//                $output['zai'] = 2;
-//            }
+
+            if($output['zai1']==1 && $output['zai2']==1 && $output['zai3']==1){
+                $output['zai'] = 1;
+            }else{
+                $output['zai'] = 2;
+            }
+
+            if($output['zai1x3']==1 && $output['zai2x3']==1 && $output['zai3x3']==1){
+                $output['zaix3'] = 1;
+            }else{
+                $output['zaix3'] = 2;
+            }
         }else{
             $output['zai'] = 0;
             $output['zai1'] = 0;
