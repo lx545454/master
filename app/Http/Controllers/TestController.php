@@ -11,7 +11,7 @@ class TestController extends BaseController
     public function setRedis()
     {
         $key = Input::get("key");
-        app('cache')->put($key,1);
+        app('cache')->put($key,1,60);
 
     }
 
