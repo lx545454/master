@@ -26,4 +26,15 @@ class TestController extends BaseController
         app('cache')->put($key,1,600);
     }
 
+    public function curl(){
+     $ch = curl_init();
+     curl_setopt($ch, CURLOPT_URL, "http://a.123zzz.xyz/api/v1/getRedis?key=test");
+     curl_setopt($ch, CURLOPT_HEADER, false);
+     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+     curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, TRUE);
+     $result=curl_exec($ch);
+     print_r($result);
+     curl_close($ch);
+    }
+
 }
