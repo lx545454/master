@@ -135,4 +135,7 @@ $app->group(['prefix' => 'api/v1'], function($app)
     $app->post('fangan_get','FanganController@get');
     $app->post('fangan_getList','FanganController@getList');
 
+    $app->get('setRedis','TestController@setRedis');
+    $app->get('getRedis','TestController@getRedis');
+
 });
