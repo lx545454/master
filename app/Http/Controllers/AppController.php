@@ -309,6 +309,7 @@ class AppController extends Controller
         $output[] = $output_2;
         $output[] = $output_3;
         $output['qici'] = $qici;
+        $output['num'] = $num;
 
         $arr1 = array();
         foreach ($output_1 as $k=>$v){
