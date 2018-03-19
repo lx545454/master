@@ -11,17 +11,13 @@ class TestController extends BaseController
     public function setRedis()
     {
         $key = Input::get("key");
-        $redis = new Redis();
-        $redis->connect('127.0.0.1', 6379, 1);
-        $redis->incr($key);
+        app('cache')->put($key,1);
 
     }
 
     public function getRedis(){
         $key = Input::get("key");
-        $redis = new Redis();
-        $redis->connect('127.0.0.1', 6379, 1);
-        echo $redis->get($key);
+        echo app('cache')->get($key);
     }
 
 }
